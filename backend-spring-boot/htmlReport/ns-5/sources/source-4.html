@@ -1,0 +1,236 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PermissionService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.services</a>
+</div>
+
+<h1>Coverage Summary for Class: PermissionService (com.civilo.roller.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PermissionService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (20/20)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">PermissionService$MockitoMock$TicTrVOE</td>
+  </tr>
+  <tr>
+    <td class="name">PermissionService$MockitoMock$TicTrVOE$auxiliary$0IuXIubU</td>
+  </tr>
+  <tr>
+    <td class="name">PermissionService$MockitoMock$TicTrVOE$auxiliary$6ui1Xinc</td>
+  </tr>
+  <tr>
+    <td class="name">PermissionService$MockitoMock$TicTrVOE$auxiliary$Acw90XBJ</td>
+  </tr>
+  <tr>
+    <td class="name">PermissionService$MockitoMock$TicTrVOE$auxiliary$AO1l2Nhn</td>
+  </tr>
+  <tr>
+    <td class="name">PermissionService$MockitoMock$TicTrVOE$auxiliary$AXY9SjgU</td>
+  </tr>
+  <tr>
+    <td class="name">PermissionService$MockitoMock$TicTrVOE$auxiliary$dNlSJzpc</td>
+  </tr>
+  <tr>
+    <td class="name">PermissionService$MockitoMock$TicTrVOE$auxiliary$ePwE2pAQ</td>
+  </tr>
+  <tr>
+    <td class="name">PermissionService$MockitoMock$TicTrVOE$auxiliary$eqBxtuFO</td>
+  </tr>
+  <tr>
+    <td class="name">PermissionService$MockitoMock$TicTrVOE$auxiliary$G9WceOMb</td>
+  </tr>
+  <tr>
+    <td class="name">PermissionService$MockitoMock$TicTrVOE$auxiliary$ILN1XPib</td>
+  </tr>
+  <tr>
+    <td class="name">PermissionService$MockitoMock$TicTrVOE$auxiliary$n2NZWsrq</td>
+  </tr>
+  <tr>
+    <td class="name">PermissionService$MockitoMock$TicTrVOE$auxiliary$XXvMPaSm</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (20/20)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.services;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.PermissionEntity;
+&nbsp;import com.civilo.roller.repositories.PermissionRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import com.civilo.roller.exceptions.EntityNotFoundException;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class PermissionService {</b>
+&nbsp;    @Autowired
+&nbsp;    PermissionRepository permissionRepository;
+&nbsp;
+&nbsp;    // Get all
+&nbsp;    // El siguiente método retorna un listado el cual contiene TODA la información asociada a los permisos
+&nbsp;    public List&lt;PermissionEntity&gt; getPermissions(){
+<b class="fc">&nbsp;        return (List&lt;PermissionEntity&gt;) permissionRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Get by id
+&nbsp;    // Permite obtener la informacion de un permiso en especifico.
+&nbsp;    public Optional&lt;PermissionEntity&gt; getPermissionById(Long id){
+<b class="fc">&nbsp;        return permissionRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // El siguiente método permite guardar un objeto del tipo &quot;PermissionEntity&quot; en la base de datos
+&nbsp;    public PermissionEntity savePermission(PermissionEntity permission){
+<b class="fc">&nbsp;        return permissionRepository.save(permission);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Create
+&nbsp;    // Permite guardar un objeto del tipo &quot;PermissionEntity&quot; en la base de datos.
+&nbsp;    public PermissionEntity createPermission(PermissionEntity permission){   
+<b class="fc">&nbsp;        return permissionRepository.save(permission);  </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite verificar si existe el tipo de cuenta ingresado.
+&nbsp;    public Optional&lt;PermissionEntity&gt; validatePermission(String permission){
+<b class="fc">&nbsp;        return Optional.ofNullable(permissionRepository.findByPermission(permission));  </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Update
+&nbsp;    // Permite actualizar los datos de un objeto del tipo &quot;PermissionEntity&quot; en la base de datos.
+&nbsp;    public PermissionEntity updatePermission(Long permissionID, PermissionEntity permission){
+<b class="fc">&nbsp;        PermissionEntity existingPermission = permissionRepository.findById(permissionID)</b>
+<b class="fc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Permiso no encontrado con el ID: &quot; + permissionID));</b>
+&nbsp;
+<b class="fc">&nbsp;        existingPermission.setPermission(permission.getPermission()); //No deberia poder cambiarse</b>
+&nbsp;        
+<b class="fc">&nbsp;        PermissionEntity updatedPermission = permissionRepository.save(existingPermission);</b>
+<b class="fc">&nbsp;        return updatedPermission;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete all
+&nbsp;    // Permite eliminar todos los permisos del sistema.
+&nbsp;    public void deletePermissions() {
+<b class="fc">&nbsp;        permissionRepository.deleteAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete by id
+&nbsp;    // Permite eliminar un permiso en especifico del sistema.
+&nbsp;    public void deletePermissionById(Long id){
+<b class="fc">&nbsp;        permissionRepository.deleteById(id);</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Permite verificar si existe un permiso en el sistema, segun el id ingresado.
+&nbsp;    public boolean existsPermissionById(Long id){
+<b class="fc">&nbsp;        return permissionRepository.findById(id).isPresent();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //----------------------------------------------------------------------------------------------
+&nbsp;
+&nbsp;    public String rolePermissions(Long roleId){
+<b class="fc">&nbsp;        List&lt;PermissionEntity&gt; permissionEntityList = getPermissions();</b>
+<b class="fc">&nbsp;        String permisos = &quot;&quot;;</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; permissionEntityList.size(); i++){</b>
+<b class="fc">&nbsp;            if (permissionEntityList.get(i).getRole().getRoleID() == roleId){</b>
+<b class="fc">&nbsp;                permisos = permisos + permissionEntityList.get(i).getPermission() + &quot;\n                  &quot;;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return permisos;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

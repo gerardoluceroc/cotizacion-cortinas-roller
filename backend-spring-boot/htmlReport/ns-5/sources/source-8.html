@@ -1,0 +1,260 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > QuoteSummaryService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.services</a>
+</div>
+
+<h1>Coverage Summary for Class: QuoteSummaryService (com.civilo.roller.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">QuoteSummaryService</td>
+<td class="coverageStat">
+  <span class="percent">
+    30%
+  </span>
+  <span class="absValue">
+    (3/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    76,7%
+  </span>
+  <span class="absValue">
+    (33/43)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">QuoteSummaryService$MockitoMock$PRoPqCZG</td>
+  </tr>
+  <tr>
+    <td class="name">QuoteSummaryService$MockitoMock$PRoPqCZG$auxiliary$0YCRKlgC</td>
+  </tr>
+  <tr>
+    <td class="name">QuoteSummaryService$MockitoMock$PRoPqCZG$auxiliary$caXOTI62</td>
+  </tr>
+  <tr>
+    <td class="name">QuoteSummaryService$MockitoMock$PRoPqCZG$auxiliary$eIoit6IT</td>
+  </tr>
+  <tr>
+    <td class="name">QuoteSummaryService$MockitoMock$PRoPqCZG$auxiliary$imN0dQm1</td>
+  </tr>
+  <tr>
+    <td class="name">QuoteSummaryService$MockitoMock$PRoPqCZG$auxiliary$K0j52W0J</td>
+  </tr>
+  <tr>
+    <td class="name">QuoteSummaryService$MockitoMock$PRoPqCZG$auxiliary$lOrSNMRw</td>
+  </tr>
+  <tr>
+    <td class="name">QuoteSummaryService$MockitoMock$PRoPqCZG$auxiliary$NgzXy9hF</td>
+  </tr>
+  <tr>
+    <td class="name">QuoteSummaryService$MockitoMock$PRoPqCZG$auxiliary$TjXmriBj</td>
+  </tr>
+  <tr>
+    <td class="name">QuoteSummaryService$MockitoMock$PRoPqCZG$auxiliary$Uljgevjp</td>
+  </tr>
+  <tr>
+    <td class="name">QuoteSummaryService$MockitoMock$PRoPqCZG$auxiliary$UxHS8JKO</td>
+  </tr>
+  <tr>
+    <td class="name">QuoteSummaryService$MockitoMock$PRoPqCZG$auxiliary$v7epNQPE</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    30%
+  </span>
+  <span class="absValue">
+    (3/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    76,7%
+  </span>
+  <span class="absValue">
+    (33/43)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.services;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.QuoteEntity;
+&nbsp;import com.civilo.roller.Entities.QuoteSummaryEntity;
+&nbsp;import com.civilo.roller.Entities.SellerEntity;
+&nbsp;import com.civilo.roller.repositories.QuoteSummaryRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import com.civilo.roller.exceptions.EntityNotFoundException;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.Date;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class QuoteSummaryService {</b>
+&nbsp;    @Autowired
+&nbsp;    QuoteSummaryRepository quoteSummaryRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    IVAService ivaService;
+&nbsp;
+&nbsp;    // Get all
+&nbsp;    // El siguiente método retorna un listado el cual contiene TODA la información asociada a los resumenes de cotizacion
+&nbsp;    public List&lt;QuoteSummaryEntity&gt; getQuoteSummarys(){
+<b class="nc">&nbsp;        return (List&lt;QuoteSummaryEntity&gt;) quoteSummaryRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Get by id
+&nbsp;    // Permite obtener la informacion de un resumen de cotizacion en especifico.
+&nbsp;    public Optional&lt;QuoteSummaryEntity&gt; getQuoteSummaryById(Long id){
+<b class="nc">&nbsp;        return quoteSummaryRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite guardar un objeto del tipo &quot;QuoteSummaryEntity&quot; en la base de datos.
+&nbsp;    public QuoteSummaryEntity saveQuoteSummary(QuoteSummaryEntity quoteSummary){
+<b class="fc">&nbsp;        return quoteSummaryRepository.save(quoteSummary);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Create
+&nbsp;    // Permite guardar un objeto del tipo &quot;QuoteSummaryEntity&quot; en la base de datos.
+&nbsp;    public QuoteSummaryEntity createQuoteSummary(QuoteSummaryEntity quoteSummary){   
+<b class="nc">&nbsp;        return quoteSummaryRepository.save(quoteSummary);  </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Update
+&nbsp;    // Permite actualizar los datos de un objeto del tipo &quot;QuoteSummaryEntity&quot; en la base de datos.
+&nbsp;    public QuoteSummaryEntity updateQuoteSummary(Long quoteSummaryID, QuoteSummaryEntity quoteSummary){
+<b class="nc">&nbsp;        QuoteSummaryEntity existingQuoteSummary = quoteSummaryRepository.findById(quoteSummaryID)</b>
+<b class="nc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Resumen de cotizacion no encontrado con el ID: &quot; + quoteSummaryID));</b>
+&nbsp;
+&nbsp;        //existingQuoteSummary.setPermission(quoteSummary.getPermission()); //No deberia poder cambiarse
+&nbsp;        
+<b class="nc">&nbsp;        QuoteSummaryEntity updatedQuoteSummary = quoteSummaryRepository.save(existingQuoteSummary);</b>
+<b class="nc">&nbsp;        return updatedQuoteSummary;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete all
+&nbsp;    // Permite eliminar todos los resumenes de cotizacion del sistema.
+&nbsp;    public void deleteQuoteSummary() {
+<b class="nc">&nbsp;        quoteSummaryRepository.deleteAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete by id
+&nbsp;    // Permite eliminar un resumen de cotizacion en especifico del sistema.
+&nbsp;    public void deleteQuoteSummaryById(Long id){
+<b class="nc">&nbsp;        quoteSummaryRepository.deleteById(id);</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Permite verificar si existe un resumen de cotizacion en el sistema, segun el id ingresado.
+&nbsp;    public boolean existsQuoteSummaryById(Long id){
+<b class="nc">&nbsp;        return quoteSummaryRepository.findById(id).isPresent();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Permite realizar cálculos del resumen de cotización
+&nbsp;    public QuoteSummaryEntity summaryCalculation(List&lt;QuoteEntity&gt; quoteEntities, Long quoteSummaryID){
+<b class="fc">&nbsp;        QuoteSummaryEntity quoteSummary = new QuoteSummaryEntity();</b>
+<b class="fc">&nbsp;        float totalCostOfProduction = 0, totalSaleValue = 0, valueAfterDiscount = 0, discountPercentage = 0, totalNet = 0, iva = 0, ivaPercentage = 0, total = 0;</b>
+<b class="fc">&nbsp;        Date date = null;</b>
+<b class="fc">&nbsp;        SellerEntity seller = null;</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; quoteEntities.size(); i++) {</b>
+<b class="fc">&nbsp;            totalCostOfProduction += quoteEntities.get(i).getProductionCost();</b>
+<b class="fc">&nbsp;            totalSaleValue += quoteEntities.get(i).getSaleValue();</b>
+<b class="fc">&nbsp;            discountPercentage = quoteEntities.get(i).getPercentageDiscount();</b>
+<b class="fc">&nbsp;            date = quoteEntities.get(i).getDate();</b>
+<b class="fc">&nbsp;            seller = quoteEntities.get(i).getSeller();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        ivaPercentage = ivaService.getLastIVA().getIvaPercentage();</b>
+<b class="fc">&nbsp;        valueAfterDiscount = totalSaleValue;</b>
+<b class="fc">&nbsp;        totalNet = totalSaleValue;</b>
+<b class="fc">&nbsp;        if (discountPercentage != 0) {</b>
+<b class="fc">&nbsp;            valueAfterDiscount = (float) Math.ceil(totalSaleValue * (discountPercentage / 100));</b>
+<b class="fc">&nbsp;            totalNet = totalSaleValue - valueAfterDiscount;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        iva = totalNet;</b>
+<b class="fc">&nbsp;        if (ivaPercentage != 0) {</b>
+<b class="fc">&nbsp;            iva = (float) Math.ceil(totalNet * (ivaPercentage / 100));</b>
+&nbsp;        }
+<b class="fc">&nbsp;        total = (float) Math.ceil(totalNet * (1 + ivaPercentage / 100));</b>
+<b class="fc">&nbsp;        quoteSummary.setDate(date);</b>
+<b class="fc">&nbsp;        quoteSummary.setSeller(seller);</b>
+<b class="fc">&nbsp;        quoteSummary.setTotalCostOfProduction((int) Math.ceil(totalCostOfProduction));</b>
+<b class="fc">&nbsp;        quoteSummary.setTotalSaleValue((int) Math.ceil(totalSaleValue));</b>
+<b class="fc">&nbsp;        quoteSummary.setValueAfterDiscount((int) Math.ceil(valueAfterDiscount));</b>
+<b class="fc">&nbsp;        quoteSummary.setNetTotal((int) Math.ceil(totalNet));</b>
+<b class="fc">&nbsp;        quoteSummary.setTotal((int) Math.ceil(total));</b>
+<b class="fc">&nbsp;        quoteSummary.setCurrentIVA(ivaService.getIVAByPercentage(ivaPercentage));</b>
+&nbsp;
+<b class="fc">&nbsp;        if (quoteSummaryID != null){</b>
+<b class="fc">&nbsp;            quoteSummary.setQuoteSummaryID(quoteSummaryID);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return quoteSummaryRepository.save(quoteSummary);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

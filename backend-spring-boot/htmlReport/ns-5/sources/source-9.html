@@ -1,0 +1,326 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > RequestService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.services</a>
+</div>
+
+<h1>Coverage Summary for Class: RequestService (com.civilo.roller.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RequestService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    57,6%
+  </span>
+  <span class="absValue">
+    (34/59)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl</td>
+  </tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl$auxiliary$Dy1nhRIW</td>
+  </tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl$auxiliary$f5FBKDiD</td>
+  </tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl$auxiliary$fD0BF9k5</td>
+  </tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl$auxiliary$FYscJ3Sy</td>
+  </tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl$auxiliary$HIRmlhoq</td>
+  </tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl$auxiliary$MHQT8P4B</td>
+  </tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl$auxiliary$nqJDXHVc</td>
+  </tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl$auxiliary$nVR2XrHq</td>
+  </tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl$auxiliary$Q27a6rsR</td>
+  </tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl$auxiliary$Rtt1anDG</td>
+  </tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl$auxiliary$sQllYP0E</td>
+  </tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl$auxiliary$TvTNr41v</td>
+  </tr>
+  <tr>
+    <td class="name">RequestService$MockitoMock$v5ICKCWl$auxiliary$VNVNXnFR</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    57,6%
+  </span>
+  <span class="absValue">
+    (34/59)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.services;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.RequestEntity;
+&nbsp;import com.civilo.roller.Entities.SellerEntity;
+&nbsp;import com.civilo.roller.Entities.CoverageEntity;
+&nbsp;import com.civilo.roller.Entities.CurtainEntity;
+&nbsp;import com.civilo.roller.Entities.StatusEntity;
+&nbsp;import com.civilo.roller.Entities.UserEntity;
+&nbsp;import com.civilo.roller.repositories.RequestRepository;
+&nbsp;import com.civilo.roller.repositories.SellerRepository;
+&nbsp;import com.civilo.roller.repositories.CoverageRepository;
+&nbsp;import com.civilo.roller.repositories.CurtainRepository;
+&nbsp;import com.civilo.roller.repositories.StatusRepository;
+&nbsp;import com.civilo.roller.repositories.UserRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import com.civilo.roller.exceptions.EntityNotFoundException;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.Random;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class RequestService {</b>
+&nbsp;    @Autowired
+&nbsp;    RequestRepository requestRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    SellerService sellerService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    StatusService statusService;
+&nbsp;
+&nbsp;    @Autowired 
+&nbsp;    SellerRepository sellerRepository;
+&nbsp;
+&nbsp;    @Autowired 
+&nbsp;    CoverageRepository coverageRepository;
+&nbsp;
+&nbsp;    @Autowired 
+&nbsp;    CurtainRepository curtainRepository;
+&nbsp;
+&nbsp;    @Autowired 
+&nbsp;    StatusRepository statusRepository;
+&nbsp;
+&nbsp;    @Autowired 
+&nbsp;    UserRepository userRepository;
+&nbsp; 
+&nbsp;    // Get all
+&nbsp;    // El siguiente método retorna un listado el cual contiene TODA la información asociada a las solicitudes
+&nbsp;    public List&lt;RequestEntity&gt; getRequests(){
+<b class="fc">&nbsp;        return (List&lt;RequestEntity&gt;) requestRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //Get By CLient ID
+&nbsp;    //Permite obtener las solicitudes de un cliente especifico
+&nbsp;    public ArrayList&lt;RequestEntity&gt; getRequestByUserId(Long id_cliente){
+&nbsp;        //List&lt;RequestEntity&gt; listado =  (List&lt;RequestEntity&gt;) requestRepository.findRequestByUserId(id_cliente);
+&nbsp;        //System.out.println(&quot;HOLAAAAAAAAAAAAAAAAAA&quot;+listado);
+&nbsp;        //System.out.println(&quot;FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF&quot;);
+&nbsp;
+<b class="fc">&nbsp;        return requestRepository.findRequestByUserId(id_cliente);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Get by id
+&nbsp;    // Permite obtener la informacion de una solicitud en especifico.
+&nbsp;    public Optional&lt;RequestEntity&gt; getRequestById(Long id){
+<b class="fc">&nbsp;        return requestRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Create
+&nbsp;    // Permite guardar un objeto del tipo &quot;RequestEntity&quot; en la base de datos.
+&nbsp;    public RequestEntity createRequest(RequestEntity request){   
+<b class="fc">&nbsp;        return requestRepository.save(request);  </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Update
+&nbsp;    // Permite actualizar los datos de un objeto del tipo &quot;RequestEntity&quot; en la base de datos.
+&nbsp;    public RequestEntity updateRequest(Long requestID, RequestEntity request){
+&nbsp;
+<b class="fc">&nbsp;        RequestEntity existingRequest = requestRepository.findById(requestID)</b>
+<b class="fc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Solicitud no encontrada con el ID: &quot; + requestID));</b>
+&nbsp;
+<b class="fc">&nbsp;        existingRequest.setAdmissionDate(request.getAdmissionDate());</b>
+<b class="fc">&nbsp;        existingRequest.setClosingDate(request.getClosingDate());</b>
+<b class="fc">&nbsp;        existingRequest.setDeadline(request.getDeadline());</b>
+<b class="fc">&nbsp;        existingRequest.setDescription(request.getDescription());</b>
+<b class="fc">&nbsp;        existingRequest.setReason(request.getReason());</b>
+<b class="fc">&nbsp;        existingRequest.setSellerId(request.getSellerId());</b>
+&nbsp;
+<b class="fc">&nbsp;        CoverageEntity existingCoverage = coverageRepository.findById(request.getCoverage().getCoverageID())</b>
+<b class="nc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Cobertura no encontrada con el ID: &quot; + request.getCoverage().getCoverageID()));</b>
+<b class="nc">&nbsp;        Long newCoverageId = request.getCoverage().getCoverageID();</b>
+<b class="nc">&nbsp;        CoverageEntity newCoverage = coverageRepository.findById(newCoverageId)</b>
+<b class="nc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Cobertura no encontrada con el ID: &quot; + newCoverageId));</b>
+<b class="nc">&nbsp;        existingRequest.setCoverage(newCoverage);</b>
+&nbsp;        
+<b class="nc">&nbsp;        CurtainEntity existingCurtain = curtainRepository.findById(request.getCurtain().getCurtainID())</b>
+<b class="nc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Cortina no encontrada con el ID: &quot; + request.getCurtain().getCurtainID()));</b>
+<b class="nc">&nbsp;        Long newCurtainId = request.getCurtain().getCurtainID();</b>
+<b class="nc">&nbsp;        CurtainEntity newCurtain = curtainRepository.findById(newCurtainId)</b>
+<b class="nc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Cortina no encontrada con el ID: &quot; + newCurtainId));</b>
+<b class="nc">&nbsp;        existingRequest.setCurtain(newCurtain);</b>
+&nbsp;
+<b class="nc">&nbsp;        StatusEntity existingStatus = statusRepository.findById(request.getStatus().getStatusID())</b>
+<b class="nc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Status no encontrado con el ID: &quot; + request.getStatus().getStatusID()));</b>
+<b class="nc">&nbsp;        Long newStatusId = request.getStatus().getStatusID();</b>
+<b class="nc">&nbsp;        StatusEntity newStatus = statusRepository.findById(newStatusId)</b>
+<b class="nc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Status no encontrado con el ID: &quot; + newStatusId));</b>
+<b class="nc">&nbsp;        existingRequest.setStatus(newStatus);</b>
+&nbsp;
+<b class="nc">&nbsp;        UserEntity existingUser = userRepository.findById(request.getUser().getUserID())</b>
+<b class="nc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Usuario no encontrado con el ID: &quot; + request.getUser().getUserID()));</b>
+<b class="nc">&nbsp;        Long newUserId = request.getUser().getUserID();</b>
+<b class="nc">&nbsp;        UserEntity newUser = userRepository.findById(newUserId)</b>
+<b class="nc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Usuario no encontrado con el ID: &quot; + newUserId));</b>
+<b class="nc">&nbsp;        existingRequest.setUser(newUser);</b>
+&nbsp;        
+<b class="nc">&nbsp;        RequestEntity updatedRequest = requestRepository.save(existingRequest);</b>
+<b class="nc">&nbsp;        return updatedRequest;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete all
+&nbsp;    // Permite eliminar todas las solicitudes de un sistema.
+&nbsp;    public void deleteRequest() {
+<b class="fc">&nbsp;        requestRepository.deleteAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete by id
+&nbsp;    // Permite eliminar una solicitud en especifico del sistema.
+&nbsp;    public void deleteRequestById(Long id){
+<b class="fc">&nbsp;        requestRepository.deleteById(id);</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Permite verificar si existe una solicitud en el sistema, según el id ingresado.
+&nbsp;    public boolean existsRequestById(Long id){
+<b class="fc">&nbsp;        return requestRepository.findById(id).isPresent();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //----------------------------------------------------------------------------------------------
+&nbsp;
+&nbsp;    public RequestEntity saveRequest(RequestEntity request){
+<b class="fc">&nbsp;        return requestRepository.save(request);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;RequestEntity&gt; getRequestBySellerId(Long sellerId) {
+<b class="fc">&nbsp;        List&lt;RequestEntity&gt; requests = getRequests();</b>
+<b class="fc">&nbsp;        List&lt;RequestEntity&gt; myRequest = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; requests.size(); i++){</b>
+<b class="fc">&nbsp;            if (requests.get(i).getSellerId() == sellerId){</b>
+<b class="fc">&nbsp;                myRequest.add(requests.get(i));</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return myRequest;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void automaticAssignment(){
+<b class="fc">&nbsp;        List&lt;RequestEntity&gt; requestEntities = getRequests();</b>
+<b class="fc">&nbsp;        List&lt;SellerEntity&gt; sellerEntities = sellerService.getSellers();</b>
+<b class="fc">&nbsp;        Random rand = new Random();</b>
+<b class="fc">&nbsp;        RequestEntity currentRequest = new RequestEntity();</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; requestEntities.size(); i++){</b>
+<b class="fc">&nbsp;            currentRequest = requestEntities.get(i);</b>
+<b class="fc">&nbsp;            if (currentRequest.getSellerId() == 0){</b>
+<b class="fc">&nbsp;                currentRequest.setSellerId(sellerEntities.get(rand.nextInt(sellerEntities.size())).getUserID().intValue());</b>
+<b class="fc">&nbsp;                currentRequest.setStatus(statusService.getStatus().get(1));</b>
+<b class="fc">&nbsp;                requestRepository.save(currentRequest);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

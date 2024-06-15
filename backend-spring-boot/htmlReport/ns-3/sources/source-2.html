@@ -1,0 +1,208 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CurtainController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: CurtainController (com.civilo.roller.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CurtainController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (33/33)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.controllers;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.CurtainEntity;
+&nbsp;import com.civilo.roller.services.CurtainService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.List;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestBody;
+&nbsp;
+&nbsp;@CrossOrigin(origins = &quot;*&quot;, allowedHeaders = &quot;*&quot;)
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/curtains&quot;)
+<b class="fc">&nbsp;public class CurtainController {</b>
+&nbsp;    @Autowired
+&nbsp;    CurtainService curtainService;
+&nbsp;
+&nbsp;    // Permite obtener todas las cortinas del sistema.
+&nbsp;    @GetMapping()
+&nbsp;    public List&lt;CurtainEntity&gt; getCurtains(){
+<b class="fc">&nbsp;        return curtainService.getCurtains();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite obtener una cortina en especifico del sistema.
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;CurtainEntity&gt; getCurtainById(@PathVariable long id){
+<b class="fc">&nbsp;        Optional&lt;CurtainEntity&gt; curtain = curtainService.getCurtainById(id);</b>
+<b class="fc">&nbsp;        if(!curtain.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO LA CORTINA \n&quot;);</b>
+<b class="fc">&nbsp;            return new ResponseEntity&lt;&gt;(null,HttpStatus.NOT_FOUND);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return new ResponseEntity&lt;CurtainEntity&gt;(curtain.get(), HttpStatus.OK);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite guardar entidad cortina.
+&nbsp;    @PostMapping()
+&nbsp;    public CurtainEntity saveCurtain(@RequestBody CurtainEntity curtain){
+<b class="fc">&nbsp;        return this.curtainService.createCurtain(curtain);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite guardar una nueva cortina en el sistema.
+&nbsp;    @PostMapping(&quot;/register&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; createCurtain(@RequestBody CurtainEntity curtain){
+&nbsp;
+<b class="fc">&nbsp;        Optional&lt;CurtainEntity&gt; existingCurtain = curtainService.validateCurtain(curtain.getCurtainType()); </b>
+&nbsp;    
+&nbsp;        //Se verifica si la cortina esta registrada
+<b class="fc">&nbsp;        if(existingCurtain.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;CORTINA YA REGISTRADA \n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;La cortina ingresada ya existe&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        curtainService.createCurtain(curtain);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;GUARDADO CON EXITO \n&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build();    </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite actualizar informacion de una cortina.
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; updateCurtain(@PathVariable long id, @RequestBody CurtainEntity curtain){
+&nbsp;
+<b class="fc">&nbsp;        Optional&lt;CurtainEntity&gt; checkCurtainType = curtainService.getCurtainById(id);</b>
+&nbsp;
+<b class="fc">&nbsp;        if(!checkCurtainType.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO LA CORTINA CON ID: &quot; + id + &quot; \n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;La cortina con el ID especificado no se encuentra registrada.&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        Optional&lt;CurtainEntity&gt; checkName = curtainService.validateCurtain(curtain.getCurtainType());</b>
+&nbsp;    
+<b class="fc">&nbsp;        if(checkName.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NOMBRE EN USO \n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;El nombre a modificar ya se encuentra registrado&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        curtainService.updateCurtain(id,curtain);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;ACTUALIZADO CON EXITO \n&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite eliminar todas las cortinas del sistema.
+&nbsp;    @DeleteMapping()
+&nbsp;    public ResponseEntity&lt;String&gt; deleteCurtains(){
+<b class="fc">&nbsp;        curtainService.deleteCurtains();</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;SE ELIMINARON LAS CORTINAS CORRECTAMENTE&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite eliminar una cortina en especifico del sistema.
+&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;String&gt; deleteCurtainById(@PathVariable Long id){
+<b class="fc">&nbsp;        if(!curtainService.existCurtainById(id)){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO LA CORTINA CON EL ID: &quot; + id + &quot; \n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        curtainService.deleteCurtainById(id);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;CORTINA CON ID &quot; + id + &quot; ELIMINADA CORRECTAMENTE \n&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //------------------------------------------------------------------------------------------------------------------------------------------------//
+&nbsp;
+&nbsp; 
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,188 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > QuoteSummaryController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: QuoteSummaryController (com.civilo.roller.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">QuoteSummaryController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14,3%
+  </span>
+  <span class="absValue">
+    (1/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    4,2%
+  </span>
+  <span class="absValue">
+    (1/24)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.controllers;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.QuoteSummaryEntity;
+&nbsp;import com.civilo.roller.services.QuoteSummaryService;
+&nbsp;import jakarta.servlet.http.HttpServletRequest;
+&nbsp;import jakarta.servlet.http.HttpSession;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.List;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestBody;
+&nbsp;
+&nbsp;@CrossOrigin(origins = &quot;*&quot;, allowedHeaders = &quot;*&quot;)
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/quoteSummarys&quot;)
+<b class="fc">&nbsp;public class QuoteSummaryController {</b>
+&nbsp;    @Autowired
+&nbsp;    QuoteSummaryService quoteSummaryService;
+&nbsp;
+&nbsp;    // Permite obtener todos los resumenes de cotizacion del sistema.
+&nbsp;    @GetMapping()
+&nbsp;    public List&lt;QuoteSummaryEntity&gt; getQuoteSummarys(){
+<b class="nc">&nbsp;        return quoteSummaryService.getQuoteSummarys();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite obtener un resumen de cotizacon en especifico del sistema.
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;QuoteSummaryEntity&gt; getQuoteSummaryById(@PathVariable long id){
+<b class="nc">&nbsp;        Optional&lt;QuoteSummaryEntity&gt; quoteSummary = quoteSummaryService.getQuoteSummaryById(id);</b>
+<b class="nc">&nbsp;        if(!quoteSummary.isPresent()){</b>
+<b class="nc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO EL RESUMEN DE COTIZACION \n&quot;);</b>
+<b class="nc">&nbsp;            return new ResponseEntity&lt;&gt;(null,HttpStatus.NOT_FOUND); </b>
+&nbsp;        }
+<b class="nc">&nbsp;        return new ResponseEntity&lt;QuoteSummaryEntity&gt;(quoteSummary.get(), HttpStatus.OK);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite guardar un nuevo quoteSummary en el sistema.
+&nbsp;    @PostMapping()
+&nbsp;    public ResponseEntity&lt;?&gt; createQuoteSummary(@RequestBody QuoteSummaryEntity quoteSummary){
+&nbsp;
+<b class="nc">&nbsp;        quoteSummaryService.createQuoteSummary(quoteSummary);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;RESUMEN DE COTIZACION GUARDADO CON EXITO\n&quot;);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite actualizar información de un resumen de cotizacon.
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; updateQuoteSummary(@PathVariable long id, @RequestBody QuoteSummaryEntity quoteSummary) {
+&nbsp;        
+<b class="nc">&nbsp;        Optional&lt;QuoteSummaryEntity&gt; checkQuoteSummary = quoteSummaryService.getQuoteSummaryById(id);</b>
+&nbsp;        
+<b class="nc">&nbsp;        if(!checkQuoteSummary.isPresent()){</b>
+<b class="nc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO EL RESUMEN DE COTIZACION CON ID: &quot; + id + &quot; \n&quot;);</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;El resumen de cotizacon con el ID especificado no existe.&quot;); </b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        quoteSummaryService.updateQuoteSummary(id,quoteSummary);</b>
+<b class="nc">&nbsp;        System.out.println(&quot;ACTUALIZADO CON EXITO\n&quot;);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok().build(); </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite eliminar todos los resumenes de cotizacion del sistema.
+&nbsp;    @DeleteMapping()
+&nbsp;    public ResponseEntity&lt;String&gt; deleteQuoteSummary(){
+<b class="nc">&nbsp;        quoteSummaryService.deleteQuoteSummary();</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(&quot;SE ELIMINARON LOS RESUMENES DE COTIZACION CORRECTAMENTE&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite eliminar un resumen de cotizacon en especifico del sistema.
+&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;String&gt; deleteQuoteSummaryById(@PathVariable Long id){
+<b class="nc">&nbsp;        if(!quoteSummaryService.existsQuoteSummaryById(id)){</b>
+<b class="nc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO UN RESUMEN DE COTIZACION CON EL ID: &quot;+ id + &quot;\n&quot;);</b>
+<b class="nc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        quoteSummaryService.deleteQuoteSummaryById(id);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(&quot;RESUMEN DE COTIZACION CON ID &quot; + id + &quot; ELIMINADO CORRECTAMENTE\n&quot;);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

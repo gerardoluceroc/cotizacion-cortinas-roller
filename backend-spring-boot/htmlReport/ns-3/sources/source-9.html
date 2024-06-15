@@ -1,0 +1,237 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > RequestController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: RequestController (com.civilo.roller.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RequestController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (40/40)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.controllers;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.RequestEntity;
+&nbsp;import com.civilo.roller.Entities.UserEntity;
+&nbsp;import com.civilo.roller.services.*;
+&nbsp;import jakarta.servlet.http.HttpServletRequest;
+&nbsp;import jakarta.servlet.http.HttpSession;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestBody;
+&nbsp;
+&nbsp;@CrossOrigin(origins = &quot;*&quot;, allowedHeaders = &quot;*&quot;)
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/requests&quot;)
+<b class="fc">&nbsp;public class RequestController {</b>
+&nbsp;    @Autowired
+&nbsp;    RequestService requestService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    CoverageService coverageService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    StatusService statusService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    CurtainService curtainService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    UserService userService;
+&nbsp;
+&nbsp;    // Permite obtener todas las solicitudes del sistema.
+&nbsp;    @GetMapping()
+&nbsp;    public List&lt;RequestEntity&gt; getRequests(){
+<b class="fc">&nbsp;        return requestService.getRequests();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite obtener una solicitud en especifico del sistema.
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;RequestEntity&gt; getRequestById(@PathVariable long id){
+<b class="fc">&nbsp;        Optional&lt;RequestEntity&gt; request = requestService.getRequestById(id);</b>
+<b class="fc">&nbsp;        if(!request.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO LA SOLICITUD \n&quot;);</b>
+<b class="fc">&nbsp;            return new ResponseEntity&lt;&gt;(null,HttpStatus.NOT_FOUND); </b>
+&nbsp;        }
+<b class="fc">&nbsp;        return new ResponseEntity&lt;RequestEntity&gt;(request.get(), HttpStatus.OK);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/clientRequest/{id_cliente}&quot;)
+&nbsp;    public ArrayList&lt;RequestEntity&gt; getRequestByUserId(@PathVariable long id_cliente){
+<b class="fc">&nbsp;        return requestService.getRequestByUserId(id_cliente);</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Permite guardar una nueva solicitud en el sistema.
+&nbsp;    @PostMapping(&quot;/clientRequest&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; createRequest(@RequestBody RequestEntity requestEntity) {
+<b class="fc">&nbsp;        if (userService.validateUser(requestEntity.getUser().getEmail(), requestEntity.getUser().getPassword()) == null) {</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO EXISTE SESIÓN ACTIVA -&gt; NO SE ENVÍA LA SOLICITUD&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();</b>
+&nbsp;        }
+&nbsp;        // Validamos que el usuario que envía la solicitud es del tipo cliente
+<b class="fc">&nbsp;        if (requestEntity.getUser().getRole().getAccountType().equals(&quot;Cliente&quot;)){</b>
+<b class="fc">&nbsp;            requestEntity.setStatus(statusService.getStatus().get(0));</b>
+<b class="fc">&nbsp;            requestService.saveRequest(requestEntity);</b>
+<b class="fc">&nbsp;            System.out.println(&quot;SOLICITUD ENVIADA CORRECTAMENTE&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok().build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        System.out.println(&quot;USUARIO SIN PERMISOS PARA ESTA ACCIÓN -&gt; NO SE ENVIA LA SOLICITUD&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Permite actualizar información de un usuario.
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; updateRequest(@PathVariable long id, @RequestBody RequestEntity request) {
+&nbsp;        
+<b class="fc">&nbsp;        Optional&lt;RequestEntity&gt; checkRequest = requestService.getRequestById(id);</b>
+&nbsp;        
+<b class="fc">&nbsp;        if(!checkRequest.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO LA SOLICITUD CON ID: &quot; + id + &quot; \n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;La solicitud con el ID especificado no existe.&quot;); </b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        requestService.updateRequest(id,request);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;SOLICITUD ACTUALIZADA CON EXITO\n&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build(); </b>
+&nbsp;    } 
+&nbsp;
+&nbsp;    // Permite eliminar todas las solicitudes del sistema.
+&nbsp;    @DeleteMapping()
+&nbsp;    public ResponseEntity&lt;String&gt; deleteRequest(){
+<b class="fc">&nbsp;        requestService.deleteRequest();</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;SE ELIMINARON LAS SOLICITUDES CORRECTAMENTE&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite eliminar un usuario en especifico del sistema.
+&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;String&gt; deleteRequestById(@PathVariable Long id){
+<b class="fc">&nbsp;        if(!requestService.existsRequestById(id)){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO UNA SOLICITUD CON EL ID: &quot;+ id + &quot;\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        requestService.deleteRequestById(id);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;SOLICITUD CON ID &quot; + id + &quot; ELIMINADA CORRECTAMENTE\n&quot;);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/sellerRequest/{sellerId}&quot;)
+&nbsp;    public List&lt;RequestEntity&gt; getRequestsBySellerId(@PathVariable(&quot;sellerId&quot;) Long sellerId){
+<b class="fc">&nbsp;        return requestService.getRequestBySellerId(sellerId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/updateRequest/{requestID}/{sellerID}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; manualAssignment(@PathVariable int requestID, @PathVariable int sellerID){
+<b class="fc">&nbsp;        Optional&lt;RequestEntity&gt; request = requestService.getRequestById(Long.valueOf(String.valueOf(requestID)));</b>
+<b class="fc">&nbsp;        request.get().setSellerId(sellerID);</b>
+<b class="fc">&nbsp;        request.get().setStatus(statusService.getStatus().get(1));</b>
+<b class="fc">&nbsp;        requestService.saveRequest(request.get());</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/automaticAssignment&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; automaticAssignment(){
+<b class="fc">&nbsp;        requestService.automaticAssignment();</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

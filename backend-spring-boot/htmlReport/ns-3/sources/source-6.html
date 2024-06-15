@@ -1,0 +1,201 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ProfitMarginController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: ProfitMarginController (com.civilo.roller.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProfitMarginController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (32/32)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.controllers;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.ProfitMarginEntity;
+&nbsp;import com.civilo.roller.services.ProfitMarginService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestBody;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@CrossOrigin(origins = &quot;*&quot;, allowedHeaders = &quot;*&quot;)
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/profitMargins&quot;)
+<b class="fc">&nbsp;public class ProfitMarginController {</b>
+&nbsp;    @Autowired
+&nbsp;    ProfitMarginService profitMarginService;
+&nbsp;
+&nbsp;    // Permite obtener todos los margenes de utilidad utilizados en el sistema.
+&nbsp;    @GetMapping()
+&nbsp;    public List&lt;ProfitMarginEntity&gt; getProfitMargins(){
+<b class="fc">&nbsp;        return profitMarginService.getProfitMargins();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite obtener un margenes de utilidad en especifico del sistema.
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;ProfitMarginEntity&gt; getProfitMarginById(@PathVariable long id){
+<b class="fc">&nbsp;        Optional&lt;ProfitMarginEntity&gt; profitMargin = profitMarginService.getProfitMarginById(id);</b>
+<b class="fc">&nbsp;        if(!profitMargin.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO EL MARGEN DE UTILIDAD \n&quot;);</b>
+<b class="fc">&nbsp;            return new ResponseEntity&lt;&gt;(null,HttpStatus.NOT_FOUND); </b>
+&nbsp;        }
+<b class="fc">&nbsp;        return new ResponseEntity&lt;ProfitMarginEntity&gt;(profitMargin.get(), HttpStatus.OK);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite guardar un nuevo margen de utilidad en el sistema.
+&nbsp;    @PostMapping()
+&nbsp;    public ResponseEntity&lt;?&gt; createProfitMargin(@RequestBody ProfitMarginEntity profitMargin){
+&nbsp;
+<b class="fc">&nbsp;        Optional&lt;ProfitMarginEntity&gt; existingProfitMargin = profitMarginService.validateDecimalProfitMargin(profitMargin.getDecimalProfitMargin());</b>
+&nbsp;
+&nbsp;        //Se verifica si el margen de utilidad ya existe
+<b class="fc">&nbsp;        if(existingProfitMargin.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;ESTE MARGEN DE UTILIDAD YA EXISTE\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;Ya existe el margen de utilidad ingresado&quot;); </b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        profitMarginService.createProfitMargin(profitMargin);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;MARGEN DE UTILIDAD GUARDADO CON EXITO\n&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite actualizar información de un margen de utilidad.
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; updateProfitMargin(@PathVariable long id, @RequestBody ProfitMarginEntity profitMargin) {
+&nbsp;        
+<b class="fc">&nbsp;        Optional&lt;ProfitMarginEntity&gt; checkProfitMargin = profitMarginService.getProfitMarginById(id);</b>
+&nbsp;        
+<b class="fc">&nbsp;        if(!checkProfitMargin.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO EL MARGEN DE UTILIDAD CON ID: &quot; + id + &quot; \n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;El margen de utilidad con el ID especificado no existe.&quot;); </b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        Optional&lt;ProfitMarginEntity&gt; checkDecimalProfitMargin = profitMarginService.validateDecimalProfitMargin(profitMargin.getDecimalProfitMargin());</b>
+&nbsp;
+<b class="fc">&nbsp;        if(checkDecimalProfitMargin.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;MARGEN DE UTILIDAD INGRESADO YA EXISTE\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;El margen de utilidad ingresado ya existe&quot;); </b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        profitMarginService.updateProfitMargin(id,profitMargin);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;MARGEN DE UTILIDAD ACTUALIZADO CON EXITO\n&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build(); </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite eliminar todos los margenes de utilidad del sistema.
+&nbsp;    @DeleteMapping()
+&nbsp;    public ResponseEntity&lt;String&gt; deleteProfitMargins(){
+<b class="fc">&nbsp;        profitMarginService.deleteProfitMargins();</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;SE ELIMINARON LOS MERGENES DE UTILIDAD CORRECTAMENTE&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite eliminar un margen de utilidad en especifico del sistema.
+&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;String&gt; deleteProfitMarginById(@PathVariable Long id){
+<b class="fc">&nbsp;        if(!profitMarginService.existsProfitMarginById(id)){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO UN MARGEN DE UTILIDAD CON EL ID: &quot;+ id + &quot;\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        profitMarginService.deleteProfitMarginById(id);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;MARGEN DE UTILIDAD CON ID &quot; + id + &quot; ELIMINADO CORRECTAMENTE\n&quot;);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

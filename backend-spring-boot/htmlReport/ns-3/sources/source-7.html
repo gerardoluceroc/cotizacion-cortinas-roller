@@ -1,0 +1,589 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > QuoteController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: QuoteController (com.civilo.roller.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">QuoteController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    88,9%
+  </span>
+  <span class="absValue">
+    (8/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    89,9%
+  </span>
+  <span class="absValue">
+    (204/227)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.controllers;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.UserEntity;
+&nbsp;import com.civilo.roller.Entities.QuoteEntity;
+&nbsp;import com.civilo.roller.Entities.QuoteSummaryEntity;
+&nbsp;import com.civilo.roller.Entities.SellerEntity;
+&nbsp;import com.civilo.roller.services.IVAService;
+&nbsp;import com.civilo.roller.services.QuoteService;
+&nbsp;import com.civilo.roller.services.UserService;
+&nbsp;import com.civilo.roller.services.QuoteSummaryService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;
+&nbsp;import org.apache.pdfbox.pdmodel.PDDocument;
+&nbsp;import org.apache.pdfbox.pdmodel.PDPage;
+&nbsp;import org.apache.pdfbox.pdmodel.common.PDRectangle;
+&nbsp;import org.apache.pdfbox.pdmodel.PDPageContentStream;
+&nbsp;import org.springframework.http.MediaType;
+&nbsp;
+&nbsp;import java.io.ByteArrayOutputStream;
+&nbsp;import java.io.IOException;
+&nbsp;
+&nbsp;import java.util.Date;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.List;
+&nbsp;import java.util.ArrayList;
+&nbsp;
+&nbsp;//nuevos
+&nbsp;import com.itextpdf.text.*;
+&nbsp;import com.itextpdf.text.pdf.*;
+&nbsp;import org.springframework.http.HttpHeaders;
+&nbsp;import java.io.FileOutputStream;
+&nbsp;import java.net.MalformedURLException;
+&nbsp;import org.json.JSONObject;
+&nbsp;import java.util.Base64;
+&nbsp;
+&nbsp;@CrossOrigin(origins = &quot;*&quot;, allowedHeaders = &quot;*&quot;)
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/quotes&quot;)
+<b class="fc">&nbsp;public class QuoteController {</b>
+&nbsp;    @Autowired
+&nbsp;    QuoteService quoteService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    QuoteSummaryService quoteSummaryService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    IVAService ivaService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    UserService userService;
+&nbsp;
+&nbsp;    // Permite obtener todas las cotizaciones del sistema.
+&nbsp;    @GetMapping()
+&nbsp;    public List&lt;QuoteEntity&gt; getQuotes(){
+<b class="fc">&nbsp;        return quoteService.getQuotes();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite obtener los datos de una cotizacion en especifico.
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;QuoteEntity&gt; getQuoteById(@PathVariable long id){
+<b class="fc">&nbsp;        Optional&lt;QuoteEntity&gt; quote = quoteService.getQuoteById(id);</b>
+<b class="fc">&nbsp;        if(!quote.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO LA COTIZACION \n&quot;);</b>
+<b class="fc">&nbsp;            return new ResponseEntity&lt;&gt;(null,HttpStatus.NOT_FOUND);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return new ResponseEntity&lt;QuoteEntity&gt;(quote.get(), HttpStatus.OK);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite obtener un listado de las cotizaciones realizadas por el vendedor con sesion activa.
+&nbsp;    @GetMapping(&quot;/sellerQuotes/{id_seller}&quot;)
+&nbsp;    public List&lt;QuoteEntity&gt; getQuoteSellerId(@PathVariable long id_seller){
+<b class="fc">&nbsp;        List&lt;QuoteEntity&gt; listQuotes = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        listQuotes = quoteService.sellerQuotes(id_seller);</b>
+&nbsp;        
+<b class="fc">&nbsp;        return listQuotes;</b>
+&nbsp;    } 
+&nbsp;
+&nbsp;    // Permite guardar entidad cotizacion.
+&nbsp;    @PostMapping()
+&nbsp;    public ResponseEntity&lt;QuoteSummaryEntity&gt; saveQuotes(@RequestBody List&lt;QuoteEntity&gt; quoteList, @RequestParam(&quot;description&quot;) String description){
+<b class="fc">&nbsp;        for (int i = 0; i &lt; quoteList.size(); i ++) {</b>
+<b class="fc">&nbsp;            if (quoteList.get(i).getAmount() == 0){</b>
+<b class="fc">&nbsp;                quoteList.remove(quoteList.get(i));</b>
+<b class="fc">&nbsp;                i--;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;        
+<b class="fc">&nbsp;        for (int i = 0; i &lt; quoteList.size(); i ++) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;--------------------------------------------------------------------------------------------------------------------------------&quot;);</b>
+<b class="nc">&nbsp;            System.out.println(&quot;Cotización del tipo de cortina: &quot; + quoteList.get(i).getCurtain().getCurtainType());</b>
+<b class="nc">&nbsp;            quoteService.calculation(quoteList.get(i));</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        Long quoteSummaryID = quoteService.existQuoteSummaryWithMyInfo(quoteList);</b>
+<b class="fc">&nbsp;        QuoteSummaryEntity quoteSummary = quoteSummaryService.summaryCalculation(quoteList, quoteSummaryID);</b>
+<b class="fc">&nbsp;        quoteSummary.setDescription(description);</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; quoteList.size(); i ++) {</b>
+<b class="nc">&nbsp;            quoteList.get(i).setQuoteSummary(quoteSummary);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        System.out.println(&quot;--------------------------------------------------------------------------------------------------------------------------------&quot;);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;Resumen de cotización: &quot;);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;Costo total de producción (CLP) = Sum(Costo de producción)                    = &quot; + quoteSummary.getTotalCostOfProduction() +</b>
+<b class="fc">&nbsp;                           &quot;\nValor de venta total (CLP)      = Sum(Valor de venta)                         = &quot; + quoteSummary.getTotalSaleValue() +</b>
+<b class="fc">&nbsp;                           &quot;\nValor tras descuento (CLP)      = Valor de venta total × Descuento / 100      = &quot; + quoteSummary.getValueAfterDiscount() +</b>
+<b class="fc">&nbsp;                           &quot;\nTotal neto (CLP)                = Valor de venta total - Valor tras descuento = &quot; + quoteSummary.getNetTotal() +</b>
+<b class="fc">&nbsp;                           &quot;\nTotal (CLP)                     = Total neto × (1 + IVA / 100)                = &quot; + quoteSummary.getTotal());</b>
+<b class="fc">&nbsp;        this.quoteService.updateQuotesWithMyInfo(quoteList);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(quoteSummary);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite guardar una nueva cotizacion en el sistema.
+&nbsp;    // FALTA: Solo los vendedores deberian poder hacerlo
+&nbsp;    //@PostMapping(&quot;/register&quot;)
+&nbsp;    //public ResponseEntity&lt;?&gt; createQuote(@RequestBody QuoteEntity quote){
+&nbsp;    //    Optional&lt;QuoteEntity&gt; existingQuote = quoteService.
+&nbsp;    //} 
+&nbsp;
+&nbsp;    // Permite actualizar informacion de una cotizacion.
+&nbsp;    
+&nbsp;    @PutMapping(&quot;/{id}/{idLogin}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; updateQuote(@PathVariable long id, @RequestBody QuoteEntity quote, @PathVariable long idLogin){
+&nbsp;        
+<b class="nc">&nbsp;        Optional&lt;QuoteEntity&gt; checkQuote = quoteService.getQuoteById(id);</b>
+&nbsp;        
+<b class="nc">&nbsp;        if(!checkQuote.isPresent()){</b>
+<b class="nc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO LA COTIZACION CON ID: &quot; + id + &quot; \n&quot;);</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;La cotizacion con el ID especificado no se encuentra registrada.&quot;); </b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        int pass = -1;</b>
+<b class="nc">&nbsp;        pass = userService.validateRole(idLogin);</b>
+&nbsp;           
+<b class="nc">&nbsp;        if (pass == 1) {</b>
+<b class="nc">&nbsp;            quoteService.updateQuote(id,quote);</b>
+<b class="nc">&nbsp;            System.out.println(&quot;ACTUALIZADO CON EXITO \n&quot;);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok().build();</b>
+&nbsp;        }
+&nbsp;        else {
+<b class="nc">&nbsp;            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(&quot;No tienes permisos para modificar la cotización&quot;);</b>
+&nbsp;        }           
+&nbsp;    }
+&nbsp;    
+&nbsp;
+&nbsp;    // Permite eliminar todas las cotizaciones del sistema.
+&nbsp;    @DeleteMapping()
+&nbsp;    public ResponseEntity&lt;String&gt; deleteQuotes(){
+<b class="fc">&nbsp;        quoteService.deleteQuotes();</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;SE ELIMINARON LAS COTIZACIONES CORRECTAMENTE&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite elminar una cotizacion en especifico del sistema.
+&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;String&gt; deleteQuoteById(@PathVariable Long id){
+<b class="fc">&nbsp;        if(!quoteService.existsQuoteById(id)){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO COTIZACION CON EL ID: &quot; + id + &quot;\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        quoteService.deleteQuoteById(id);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;COTIZACION CON ID &quot; + id + &quot; ELIMINADA CORRECTAMENTE \n&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //------------------------------------------------------------------------------------------------------------------------------------------------//
+&nbsp;
+&nbsp;    @PostMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; generatePDF(@PathVariable Long id, @RequestBody SellerEntity seller) {
+&nbsp;  
+<b class="fc">&nbsp;        List&lt;QuoteSummaryEntity&gt; listSummary = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        QuoteSummaryEntity summarySelected = new QuoteSummaryEntity();</b>
+<b class="fc">&nbsp;        List&lt;QuoteEntity&gt; listQuotes = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        listSummary = quoteService.listQuoteSummary(seller.getUserID());</b>
+<b class="fc">&nbsp;        System.out.println(&quot;-------\n&quot; + listSummary + &quot;\n-------&quot;);</b>
+<b class="fc">&nbsp;        summarySelected = quoteService.findQuoteSummary(listSummary, id, seller.getUserID());</b>
+<b class="fc">&nbsp;        System.out.println(&quot;-------\n&quot; + summarySelected + &quot;\n-------&quot;);</b>
+<b class="fc">&nbsp;        listQuotes = quoteService.listQuotes(summarySelected, id, seller.getUserID());</b>
+<b class="fc">&nbsp;        System.out.println(&quot;-------\n&quot; + listQuotes + &quot;\n-------&quot;);</b>
+&nbsp;
+&nbsp;
+&nbsp;        //System.out.println(&quot;REVISANDO SUMMARY SELECTED: &quot;);
+&nbsp;        //System.out.println(summarySelected); 
+&nbsp;        //System.out.println(&quot;REVISANDO LIST QUOTES: &quot;);
+&nbsp;        //System.out.println(listQuotes); 
+&nbsp;        //System.out.println(&quot;REVISANDO LARGO LIST QUOTES: &quot; + listQuotes.size());
+&nbsp;
+&nbsp;         
+<b class="fc">&nbsp;        if(summarySelected.getQuoteSummaryID() == null){</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;No se encontro un resumen de cotizacion para la solicitud seleccionada.&quot;);</b>
+&nbsp;        } 
+&nbsp;
+<b class="fc">&nbsp;        if(listQuotes.size() == 0) {</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;No se encontraron cotizaciones para la solicitud seleccionada.&quot;);</b>
+&nbsp;        }
+&nbsp;        else{
+&nbsp;            //Proceso creacion PDF
+<b class="fc">&nbsp;            QuoteEntity quote = listQuotes.get(0);</b>
+&nbsp;
+&nbsp;            //Se crea el documento PDF
+<b class="fc">&nbsp;            Document document = new Document();</b>
+<b class="fc">&nbsp;            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                PdfWriter writer = PdfWriter.getInstance(document, outputStream);</b>
+&nbsp;
+&nbsp;                // Se abre el documento
+<b class="fc">&nbsp;                document.open();</b>
+&nbsp;
+&nbsp;                // Configuración de la caja
+<b class="fc">&nbsp;                float borderWidth = 2f;</b>
+&nbsp;                //float padding = 10f;
+<b class="fc">&nbsp;                float spacingAfter = 20f;</b>
+<b class="fc">&nbsp;                BaseColor boxColor = new BaseColor(0, 153, 255); // Color azul</b>
+<b class="fc">&nbsp;                BaseColor textColor = BaseColor.WHITE; // Color del texto dentro de la caja</b>
+&nbsp;
+&nbsp;                // Se configura el rectángulo 1 de fondo
+<b class="fc">&nbsp;                PdfContentByte canvas = writer.getDirectContentUnder();</b>
+<b class="fc">&nbsp;                Rectangle rect = new Rectangle(36, 765, 559, 810);</b>
+<b class="fc">&nbsp;                rect.setBackgroundColor(BaseColor.LIGHT_GRAY);</b>
+<b class="fc">&nbsp;                canvas.rectangle(rect);</b>
+&nbsp;
+&nbsp;                // Se agrega el texto &quot;COTIZACION&quot; dentro del rectángulo
+<b class="fc">&nbsp;                Font font1 = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.BLACK);</b>
+<b class="fc">&nbsp;                Paragraph paragraph = new Paragraph(&quot;COTIZACIÓN&quot;, font1);</b>
+<b class="fc">&nbsp;                paragraph.setAlignment(Element.ALIGN_CENTER);</b>
+<b class="fc">&nbsp;                document.add(paragraph);</b>
+&nbsp;
+&nbsp;                // Se configura el rectangulo 2
+<b class="fc">&nbsp;                PdfContentByte canvas2 = writer.getDirectContent();</b>
+<b class="fc">&nbsp;                float x2 = 36f; // Posición X de la esquina inferior izquierda del nuevo rectángulo</b>
+<b class="fc">&nbsp;                float y2 = 690f; // Posición Y de la esquina inferior izquierda del nuevo rectángulo</b>
+<b class="fc">&nbsp;                float width2 = 523f; // Ancho del nuevo rectángulo</b>
+<b class="fc">&nbsp;                float height2 = 75f; // Altura del nuevo rectángulo</b>
+&nbsp;
+&nbsp;                // Configuración de los colores y bordes del nuevo rectángulo
+<b class="fc">&nbsp;                BaseColor borderColor2 = BaseColor.BLACK;</b>
+<b class="fc">&nbsp;                BaseColor backgroundColor2 = BaseColor.WHITE;</b>
+&nbsp;
+&nbsp;                // Dibujar el rectángulo
+<b class="fc">&nbsp;                canvas2.rectangle(x2, y2, width2, height2);</b>
+<b class="fc">&nbsp;                canvas2.setColorStroke(borderColor2);</b>
+<b class="fc">&nbsp;                canvas2.setColorFill(backgroundColor2);</b>
+<b class="fc">&nbsp;                canvas2.stroke();</b>
+<b class="fc">&nbsp;                canvas2.fill();</b>
+&nbsp;
+&nbsp;                // Dibujar la línea vertical en la mitad del rectángulo
+<b class="fc">&nbsp;                float shift = 70f; // Desplazamiento adicional hacia la derecha</b>
+<b class="fc">&nbsp;                float midX2 = x2 + (width2 / 2);</b>
+<b class="fc">&nbsp;                canvas2.moveTo(midX2, y2);</b>
+<b class="fc">&nbsp;                canvas2.lineTo(midX2, y2 + height2);</b>
+<b class="fc">&nbsp;                canvas2.stroke();</b>
+&nbsp;
+&nbsp;                // Definir el área de texto dentro del rectángulo izquierdo
+<b class="fc">&nbsp;                float padding = 5f;</b>
+<b class="fc">&nbsp;                Rectangle textArea = new Rectangle(x2 + padding, y2 + padding, midX2 - padding, y2 + height2 - padding);</b>
+<b class="fc">&nbsp;                ColumnText columnText = new ColumnText(canvas2);</b>
+<b class="fc">&nbsp;                columnText.setSimpleColumn(textArea);</b>
+&nbsp;
+&nbsp;                // Agregar el texto al área de texto
+<b class="fc">&nbsp;                String textoIzquierdo = &quot;Suc Brisas Oriente 1331 / Pudahuel\nAv Pajaritos 3145 / Maipú\n(+569) 95389027  (+569) 97414699 \nContacto Marcelo Civilo 95389027&quot;;</b>
+<b class="fc">&nbsp;                Font font2 = FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);</b>
+<b class="fc">&nbsp;                Paragraph paragraph2 = new Paragraph(textoIzquierdo, font2);</b>
+<b class="fc">&nbsp;                columnText.addElement(paragraph2);</b>
+&nbsp;
+&nbsp;                // Procesar y dibujar el contenido del área de texto
+<b class="fc">&nbsp;                columnText.go();</b>
+&nbsp;                
+&nbsp;                // Agregar la imagen al rectángulo derecho
+<b class="fc">&nbsp;                float x3 = midX2 + padding; // Posición X de la esquina inferior izquierda del rectángulo derecho</b>
+<b class="fc">&nbsp;                float y3 = y2 + padding; // Posición Y de la esquina inferior izquierda del rectángulo derecho</b>
+<b class="fc">&nbsp;                float width3 = width2 - shift - (2 * padding); // Ancho del rectángulo derecho</b>
+<b class="fc">&nbsp;                float height3 = height2 - (2 * padding); // Altura del rectángulo derecho</b>
+&nbsp;
+&nbsp;                // Se define la ruta donde se agregara la imagen al PDF 
+<b class="fc">&nbsp;                String imagePath = &quot;fotopdf/roller.png&quot;; </b>
+&nbsp;                try {
+<b class="fc">&nbsp;                    Image image = Image.getInstance(imagePath);</b>
+<b class="fc">&nbsp;                    image.scaleToFit(width3-15f, height3-15f);</b>
+<b class="fc">&nbsp;                    image.setAbsolutePosition(x3, y3+10f);</b>
+&nbsp;                    // Agregar la imagen al documento
+<b class="fc">&nbsp;                    document.add(image);</b>
+<b class="nc">&nbsp;                } catch (MalformedURLException e) {</b>
+&nbsp;                    // Manejo de la excepción MalformedURLException
+<b class="nc">&nbsp;                    e.printStackTrace(); // Opcionalmente, puedes imprimir la traza de la excepción</b>
+<b class="nc">&nbsp;                } catch (IOException e) {</b>
+&nbsp;                    // Manejo de la excepción IOException
+<b class="nc">&nbsp;                    e.printStackTrace(); // Opcionalmente, puedes imprimir la traza de la excepción</b>
+<b class="fc">&nbsp;                }</b>
+&nbsp;                
+<b class="fc">&nbsp;                document.add(new Paragraph(&quot;\n\n\n\n\n&quot;));</b>
+&nbsp;
+&nbsp;                // Crear una tabla con 3 columnas
+<b class="fc">&nbsp;                PdfPTable table = new PdfPTable(3);</b>
+&nbsp;
+&nbsp;                // Establecer el ancho de la tabla para que ocupe el ancho completo
+<b class="fc">&nbsp;                table.setWidthPercentage(100f);</b>
+&nbsp;                //Datos de las celdas de la tabla
+&nbsp;
+<b class="fc">&nbsp;                String[][] data = {</b>
+<b class="fc">&nbsp;                    {&quot;Cliente:&quot;, quote.getRequestEntity().getUser().getName(), &quot;Número: &quot; + quote.getRequestEntity().getRequestID()},</b>
+<b class="fc">&nbsp;                    {&quot;Fono contacto&quot;, quote.getRequestEntity().getUser().getPhoneNumber(), &quot;Fecha: &quot; + quote.getRequestEntity().getAdmissionDate()},</b>
+<b class="fc">&nbsp;                    {&quot;RUT:&quot;, quote.getRequestEntity().getUser().getRut(), &quot;&quot;},</b>
+<b class="fc">&nbsp;                    {&quot;Comuna:&quot;, quote.getRequestEntity().getCoverage().getCommune(), &quot;www.rollerdeco.cl&quot;},</b>
+&nbsp;                    {&quot;Pais:&quot;, &quot;Chile&quot;, &quot;contacto@rollerdeco.cl&quot;},
+&nbsp;                };
+&nbsp;
+&nbsp;                // Agregar las celdas a la tabla
+<b class="fc">&nbsp;                for (String[] rowData : data) {</b>
+<b class="fc">&nbsp;                    for (String cellData : rowData) {</b>
+<b class="fc">&nbsp;                        PdfPCell cell = new PdfPCell(new Paragraph(cellData, FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.BLACK)));</b>
+<b class="fc">&nbsp;                        cell.setBackgroundColor(BaseColor.WHITE);</b>
+<b class="fc">&nbsp;                        cell.setBorderColor(BaseColor.BLACK);</b>
+<b class="fc">&nbsp;                        table.addCell(cell);</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;
+&nbsp;                // Agregar la tabla al documento
+<b class="fc">&nbsp;                document.add(table);</b>
+&nbsp;
+<b class="fc">&nbsp;                document.add(new Paragraph(&quot;\n&quot;));</b>
+&nbsp;                
+&nbsp;                // Crear una tabla con 8 columnas
+<b class="fc">&nbsp;                PdfPTable table2 = new PdfPTable(7);</b>
+&nbsp;
+&nbsp;                // Establecer el ancho de la tabla para que ocupe el ancho completo
+<b class="fc">&nbsp;                table2.setWidthPercentage(100f);</b>
+&nbsp;
+&nbsp;                // Agregar celdas a la tabla
+&nbsp;
+&nbsp;                // Primera columna
+<b class="fc">&nbsp;                PdfPCell cell1 = new PdfPCell(new Paragraph(&quot;Tipo&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK)));</b>
+<b class="fc">&nbsp;                cell1.setBackgroundColor(BaseColor.LIGHT_GRAY);</b>
+<b class="fc">&nbsp;                cell1.setBorderColor(BaseColor.BLACK);</b>
+<b class="fc">&nbsp;                table2.addCell(cell1);</b>
+&nbsp;
+&nbsp;                // Segunda columna
+<b class="fc">&nbsp;                PdfPCell cell2 = new PdfPCell(new Paragraph(&quot;Ancho (mt)&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK)));</b>
+<b class="fc">&nbsp;                cell2.setBackgroundColor(BaseColor.LIGHT_GRAY);</b>
+<b class="fc">&nbsp;                cell2.setBorderColor(BaseColor.BLACK);</b>
+<b class="fc">&nbsp;                table2.addCell(cell2);</b>
+&nbsp;
+&nbsp;                // Tercera columna
+<b class="fc">&nbsp;                PdfPCell cell3 = new PdfPCell(new Paragraph(&quot;Alto (mt)&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK)));</b>
+<b class="fc">&nbsp;                cell3.setBackgroundColor(BaseColor.LIGHT_GRAY);</b>
+<b class="fc">&nbsp;                cell3.setBorderColor(BaseColor.BLACK);</b>
+<b class="fc">&nbsp;                table2.addCell(cell3);</b>
+&nbsp;
+&nbsp;                // Cuarta columna
+<b class="fc">&nbsp;                PdfPCell cell4 = new PdfPCell(new Paragraph(&quot;Costo de producción&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK)));</b>
+<b class="fc">&nbsp;                cell4.setBackgroundColor(BaseColor.LIGHT_GRAY);</b>
+<b class="fc">&nbsp;                cell4.setBorderColor(BaseColor.BLACK);</b>
+<b class="fc">&nbsp;                table2.addCell(cell4);</b>
+&nbsp;
+&nbsp;                // Quinta columna
+<b class="fc">&nbsp;                PdfPCell cell5 = new PdfPCell(new Paragraph(&quot;Unidades&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK)));</b>
+<b class="fc">&nbsp;                cell5.setBackgroundColor(BaseColor.LIGHT_GRAY);</b>
+<b class="fc">&nbsp;                cell5.setBorderColor(BaseColor.BLACK);</b>
+<b class="fc">&nbsp;                table2.addCell(cell5);</b>
+&nbsp;
+&nbsp;                // Sexta columna
+&nbsp;
+&nbsp;
+&nbsp;                // Septima columna
+<b class="fc">&nbsp;                PdfPCell cell7 = new PdfPCell(new Paragraph(&quot;Margen de utilidad&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK)));</b>
+<b class="fc">&nbsp;                cell7.setBackgroundColor(BaseColor.LIGHT_GRAY);</b>
+<b class="fc">&nbsp;                cell7.setBorderColor(BaseColor.BLACK);</b>
+<b class="fc">&nbsp;                table2.addCell(cell7);</b>
+&nbsp;
+&nbsp;                // Octava columna
+<b class="fc">&nbsp;                PdfPCell cell8 = new PdfPCell(new Paragraph(&quot;Valor de venta&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK)));</b>
+<b class="fc">&nbsp;                cell8.setBackgroundColor(BaseColor.LIGHT_GRAY);</b>
+<b class="fc">&nbsp;                cell8.setBorderColor(BaseColor.BLACK);</b>
+<b class="fc">&nbsp;                table2.addCell(cell8);</b>
+&nbsp;
+&nbsp;                // Datos para las filas 
+<b class="fc">&nbsp;                List&lt;String[]&gt; data2 = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;                for (int i = 0; i &lt; listQuotes.size(); i++){</b>
+<b class="fc">&nbsp;                    data2.add(new String[]{listQuotes.get(i).getCurtain().getCurtainType().toString(),</b>
+<b class="fc">&nbsp;                            String.valueOf(listQuotes.get(i).getWidth()),</b>
+<b class="fc">&nbsp;                            String.valueOf(listQuotes.get(i).getHeight()),</b>
+<b class="fc">&nbsp;                            String.valueOf(&quot;$ &quot; + (int) Math.floor(listQuotes.get(i).getProductionCost())),</b>
+<b class="fc">&nbsp;                            String.valueOf(listQuotes.get(i).getAmount()),</b>
+<b class="fc">&nbsp;                            String.valueOf(listQuotes.get(i).getProfitMarginEntity().getProfitMarginPercentaje() + &quot;%&quot;),</b>
+<b class="fc">&nbsp;                            String.valueOf(&quot;$ &quot; + (int) Math.floor(listQuotes.get(i).getSaleValue()))});</b>
+&nbsp;                }
+&nbsp;
+&nbsp;                // Agregar las filas a la tabla
+<b class="fc">&nbsp;                for (String[] row : data2) {</b>
+<b class="fc">&nbsp;                    for (String value : row) {</b>
+<b class="fc">&nbsp;                        PdfPCell cellx = new PdfPCell(new Paragraph(value, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK)));</b>
+<b class="fc">&nbsp;                        cellx.setBorderColor(BaseColor.BLACK);</b>
+<b class="fc">&nbsp;                        table2.addCell(cellx);</b>
+&nbsp;                    }
+<b class="fc">&nbsp;                }</b>
+&nbsp;
+&nbsp;                // Agregar la tabla al documento
+<b class="fc">&nbsp;                document.add(table2);</b>
+&nbsp;
+&nbsp;                //---------------------------
+&nbsp;
+<b class="fc">&nbsp;                PdfPTable table3 = new PdfPTable(2);</b>
+<b class="fc">&nbsp;                table3.setWidthPercentage(100);</b>
+&nbsp;
+&nbsp;                // Columna 1 
+<b class="fc">&nbsp;                PdfPCell cell19 = new PdfPCell(new Paragraph(&quot;Datos transferencia \n\n&quot; + seller.getEmail() + &quot;\n&quot; + seller.getCompanyName() + &quot;\n&quot; + seller.getBank() + &quot;\n&quot; + seller.getBankAccountType() + &quot; &quot; + seller.getBankAccountNumber() + &quot;\n&quot; + seller.getRut(), FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.BLACK)));</b>
+<b class="fc">&nbsp;                cell19.setRowspan(6); // Fusionar 3 filas en la columna 1 </b>
+&nbsp;                //cell19.setPercentageWidth(75f); 
+<b class="fc">&nbsp;                cell19.setHorizontalAlignment(Element.ALIGN_CENTER); </b>
+<b class="fc">&nbsp;                table3.addCell(cell19);</b>
+&nbsp;
+&nbsp;                // Columna 2
+<b class="fc">&nbsp;                PdfPCell cell20 = new PdfPCell(new Paragraph(&quot;Fila 1, Columna 2&quot;));</b>
+&nbsp;
+&nbsp;                // Crear la tabla anidada con 2 columnas
+<b class="fc">&nbsp;                PdfPTable nestedTable = new PdfPTable(2);</b>
+<b class="fc">&nbsp;                nestedTable.setWidthPercentage(101f);</b>
+&nbsp;
+<b class="fc">&nbsp;                String instalation = quoteService.instalation(listQuotes);</b>
+&nbsp;
+&nbsp;                // Agregar celdas a la tabla anidada
+<b class="fc">&nbsp;                nestedTable.addCell(new PdfPCell(new Paragraph(&quot;Subtotal&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK))));</b>
+&nbsp;                
+<b class="fc">&nbsp;                nestedTable.addCell(new PdfPCell(new Paragraph(&quot;$ &quot; + String.valueOf((int) Math.floor(summarySelected.getTotalCostOfProduction())), FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK))));</b>
+<b class="fc">&nbsp;                nestedTable.addCell(new PdfPCell(new Paragraph(&quot;Descuento&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK))));</b>
+<b class="fc">&nbsp;                nestedTable.addCell(new PdfPCell(new Paragraph(&quot;$ &quot; + String.valueOf((int) Math.floor(summarySelected.getValueAfterDiscount())), FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK))));</b>
+<b class="fc">&nbsp;                nestedTable.addCell(new PdfPCell(new Paragraph(&quot;Neto&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK))));</b>
+<b class="fc">&nbsp;                nestedTable.addCell(new PdfPCell(new Paragraph(&quot;$ &quot; + String.valueOf((int) Math.floor(summarySelected.getNetTotal())), FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK))));</b>
+<b class="fc">&nbsp;                nestedTable.addCell(new PdfPCell(new Paragraph(&quot;IVA&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK))));</b>
+<b class="fc">&nbsp;                nestedTable.addCell(new PdfPCell(new Paragraph(String.valueOf(summarySelected.getCurrentIVA().getIvaPercentage()) + &quot;%&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK))));</b>
+<b class="fc">&nbsp;                nestedTable.addCell(new PdfPCell(new Paragraph(&quot;TOTAL&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK))));</b>
+<b class="fc">&nbsp;                nestedTable.addCell(new PdfPCell(new Paragraph(&quot;$ &quot; + String.valueOf((int) Math.floor(summarySelected.getTotal())), FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK))));</b>
+<b class="fc">&nbsp;                nestedTable.addCell(new PdfPCell(new Paragraph(&quot;Incluye instalación?&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK))));</b>
+<b class="fc">&nbsp;                nestedTable.addCell(new PdfPCell(new Paragraph(instalation, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK))));</b>
+&nbsp;
+<b class="fc">&nbsp;                cell20.addElement(nestedTable);</b>
+<b class="fc">&nbsp;                table3.addCell(cell20);</b>
+&nbsp;
+&nbsp;                // Omitir la celda de la columna 1 para la segunda fila
+<b class="fc">&nbsp;                PdfPCell emptyCell = new PdfPCell();</b>
+<b class="fc">&nbsp;                emptyCell.setBorder(Rectangle.NO_BORDER);</b>
+<b class="fc">&nbsp;                table3.addCell(emptyCell);</b>
+&nbsp;
+&nbsp;                // Agregar una celda más grande en la segunda fila, columna 2
+<b class="fc">&nbsp;                PdfPCell cell21 = new PdfPCell(new Paragraph(&quot;Comentarios:&quot; + summarySelected.getDescription() + &quot;\n&quot;, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK)));</b>
+<b class="fc">&nbsp;                cell21.setColspan(2); // Fusionar 2 columnas en la celda</b>
+<b class="fc">&nbsp;                table3.addCell(cell21);</b>
+&nbsp;
+&nbsp;
+&nbsp;                // Agregar la tabla al documento
+<b class="fc">&nbsp;                document.add(table3);</b>
+&nbsp;
+&nbsp;
+&nbsp;                // Se cierra el documento
+<b class="fc">&nbsp;                document.close();</b>
+&nbsp;
+&nbsp;                // Se obtiene el contenido del PDF como bytes
+<b class="fc">&nbsp;                byte[] pdfBytes = outputStream.toByteArray();</b>
+&nbsp;
+&nbsp;                // Se define el nombre del archivo PDF 
+<b class="fc">&nbsp;                String namePDF = &quot;cotizacion_ID&quot; + String.valueOf(quote.getRequestEntity().getRequestID()) + &quot;_vendedor&quot; + seller.getName() + &quot;.pdf&quot;;</b>
+&nbsp;
+&nbsp;                // Construir el objeto JSON de respuesta
+<b class="fc">&nbsp;                JSONObject responseJson = new JSONObject();</b>
+<b class="fc">&nbsp;                responseJson.put(&quot;fileName&quot;, namePDF);</b>
+<b class="fc">&nbsp;                responseJson.put(&quot;pdfData&quot;, Base64.getEncoder().encodeToString(pdfBytes)); // Convertir los bytes del PDF a Base64</b>
+&nbsp;
+&nbsp;                // Devolver el objeto JSON como respuesta
+<b class="fc">&nbsp;                return ResponseEntity.ok()</b>
+<b class="fc">&nbsp;                        .contentType(MediaType.APPLICATION_JSON)</b>
+<b class="fc">&nbsp;                        .body(responseJson.toString());</b>
+&nbsp;    
+&nbsp;
+<b class="nc">&nbsp;            } catch (DocumentException e) {</b>
+&nbsp;                // Manejar la excepción en caso de error
+<b class="nc">&nbsp;                e.printStackTrace();</b>
+<b class="nc">&nbsp;                return new ResponseEntity&lt;&gt;(HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;            } finally {
+&nbsp;                // Cerrar el documento en caso de excepción
+<b class="fc">&nbsp;                document.close();</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

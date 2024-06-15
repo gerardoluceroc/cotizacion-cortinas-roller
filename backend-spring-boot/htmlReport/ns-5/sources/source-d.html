@@ -1,0 +1,263 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > UserService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.services</a>
+</div>
+
+<h1>Coverage Summary for Class: UserService (com.civilo.roller.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserService</td>
+<td class="coverageStat">
+  <span class="percent">
+    91,7%
+  </span>
+  <span class="absValue">
+    (11/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83,9%
+  </span>
+  <span class="absValue">
+    (26/31)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv$auxiliary$9DozNqoi</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv$auxiliary$cDghi4ht</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv$auxiliary$EuctBXWB</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv$auxiliary$K5opvOUj</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv$auxiliary$kLFo5XMw</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv$auxiliary$KZEfRity</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv$auxiliary$opbrfqcJ</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv$auxiliary$ozPE5HXf</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv$auxiliary$PyqQsRcr</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv$auxiliary$pyYLqur7</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv$auxiliary$Ra7tRXbC</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv$auxiliary$WwHa0jef</td>
+  </tr>
+  <tr>
+    <td class="name">UserService$MockitoMock$QkSQqPFv$auxiliary$YS4iopyE</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    91,7%
+  </span>
+  <span class="absValue">
+    (11/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83,9%
+  </span>
+  <span class="absValue">
+    (26/31)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.services;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.PermissionEntity;
+&nbsp;import com.civilo.roller.Entities.UserEntity;
+&nbsp;import com.civilo.roller.repositories.UserRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import com.civilo.roller.exceptions.EntityNotFoundException;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class UserService {</b>
+&nbsp;    @Autowired
+&nbsp;    UserRepository userRepository;
+&nbsp;
+&nbsp;    // Get all
+&nbsp;    // Permite obtener un listado con toda la informacion asociada a los usuarios.
+&nbsp;    public List&lt;UserEntity&gt; getUsers(){
+<b class="fc">&nbsp;        return (List&lt;UserEntity&gt;) userRepository.findAll();</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Get by id
+&nbsp;    // Permite obtener la informacion de un usuario en especifico.
+&nbsp;    public Optional&lt;UserEntity&gt; getUserById(Long id){
+<b class="fc">&nbsp;        return userRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public UserEntity getUserByEmail(String email){
+<b class="fc">&nbsp;        return userRepository.findByEmail(email);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Create
+&nbsp;    // Permite guardar un objeto del tipo &quot;UserEntity&quot; en la base de datos.
+&nbsp;    public UserEntity createUser(UserEntity user){   
+<b class="fc">&nbsp;        return userRepository.save(user);  </b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Permite verificar si existe un usuario registrado con el mismo email.
+&nbsp;    public Optional&lt;UserEntity&gt; validateEmail(String email){
+<b class="fc">&nbsp;        return Optional.ofNullable(userRepository.findByEmail(email));  </b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Update
+&nbsp;    // Permite actualizar los datos de un objeto del tipo &quot;UserEntity&quot; en la base de datos.
+&nbsp;    public UserEntity updateUser(Long userID, UserEntity user){
+&nbsp;        
+<b class="fc">&nbsp;        UserEntity existingUser = userRepository.findById(userID)</b>
+<b class="fc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Usuario no encontrado con el ID: &quot; + userID));</b>
+&nbsp;
+<b class="fc">&nbsp;        existingUser.setName(user.getName());</b>
+<b class="fc">&nbsp;        existingUser.setSurname(user.getSurname());</b>
+<b class="fc">&nbsp;        existingUser.setEmail(user.getEmail());</b>
+<b class="fc">&nbsp;        existingUser.setPassword(user.getPassword());</b>
+<b class="fc">&nbsp;        existingUser.setRut(user.getRut());</b>
+<b class="fc">&nbsp;        existingUser.setPhoneNumber(user.getPhoneNumber());</b>
+<b class="fc">&nbsp;        existingUser.setCommune(user.getCommune());</b>
+<b class="fc">&nbsp;        existingUser.setStartTime(user.getStartTime());</b>
+<b class="fc">&nbsp;        existingUser.setEndTime(user.getEndTime());</b>
+&nbsp;        //existingUser.setBirthDate(user.getBirthDate()); //ESTO NO LO PUEDE EDITAR
+&nbsp;        //existingUser.setAge(user.getAge());  //ESTO NO LO PUEDE EDITAR
+&nbsp;        
+<b class="fc">&nbsp;        UserEntity updatedUser = userRepository.save(existingUser);</b>
+<b class="fc">&nbsp;        return updatedUser;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete all
+&nbsp;    // Permite eliminar todos los usuarios de un sistema.
+&nbsp;    public void deleteUsers(){
+<b class="fc">&nbsp;        userRepository.deleteAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete by id
+&nbsp;    // Permite eliminar un usuario en especifico del sistema.
+&nbsp;    public void deleteUserById(Long id){
+<b class="fc">&nbsp;        userRepository.deleteById(id);</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Permite verificar si existe un usario en el sistema, segun el id ingresado.
+&nbsp;    public boolean existsUserById(Long id){
+<b class="fc">&nbsp;        return userRepository.findById(id).isPresent();</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    //-----------------------------------------------------------------------------------------------------------------------------------------------//
+&nbsp;    
+&nbsp;    // Login
+&nbsp;    // Permite verificar si el email y password de un usuario son correctos.
+&nbsp;    public UserEntity validateUser(String email, String password){
+<b class="fc">&nbsp;        UserEntity user = userRepository.findByEmail(email);</b>
+<b class="fc">&nbsp;        if (user != null &amp;&amp; user.getPassword().equals(password)){</b>
+<b class="fc">&nbsp;            return user;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return null;</b>
+&nbsp;    } 
+&nbsp;
+&nbsp;
+&nbsp;    public int validateRole(Long id){
+<b class="nc">&nbsp;        List&lt;UserEntity&gt; listUsers = (List&lt;UserEntity&gt;) userRepository.findAll();</b>
+&nbsp;
+<b class="nc">&nbsp;        for (int i = 0; i &lt; listUsers.size(); i++) {</b>
+<b class="nc">&nbsp;            if( (listUsers.get(i).getUserID() == id) &amp;&amp; (listUsers.get(i).getRole().getAccountType().equals(&quot;Administrador&quot;)) ){</b>
+<b class="nc">&nbsp;                return 1;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return 0;</b>
+&nbsp;    }
+&nbsp;     
+&nbsp;        
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

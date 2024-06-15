@@ -1,0 +1,210 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > RoleController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: RoleController (com.civilo.roller.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RoleController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (32/32)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.controllers;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.RoleEntity;
+&nbsp;import com.civilo.roller.services.PermissionService;
+&nbsp;import com.civilo.roller.services.RoleService;
+&nbsp;import jakarta.servlet.http.HttpServletRequest;
+&nbsp;import jakarta.servlet.http.HttpSession;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestBody;
+&nbsp;
+&nbsp;@CrossOrigin(origins = &quot;*&quot;, allowedHeaders = &quot;*&quot;)
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/roles&quot;)
+<b class="fc">&nbsp;public class RoleController {</b>
+&nbsp;    @Autowired
+&nbsp;    RoleService roleService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    PermissionService permissionService;
+&nbsp;
+&nbsp;    // Permite obtener todos los roles del sistema.
+&nbsp;    @GetMapping()
+&nbsp;    public List&lt;RoleEntity&gt; getRoles(){
+<b class="fc">&nbsp;        return roleService.getRoles();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite obtener un rol en especifico del sistema.
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;RoleEntity&gt; getRoleById(@PathVariable long id){
+<b class="fc">&nbsp;        Optional&lt;RoleEntity&gt; role = roleService.getRoleById(id);</b>
+<b class="fc">&nbsp;        if(!role.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO EL ROL \n&quot;);</b>
+<b class="fc">&nbsp;            return new ResponseEntity&lt;&gt;(null,HttpStatus.NOT_FOUND); </b>
+&nbsp;        }
+<b class="fc">&nbsp;        return new ResponseEntity&lt;RoleEntity&gt;(role.get(), HttpStatus.OK);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite guardar un nuevo rol en el sistema.
+&nbsp;    // (Se definió como alcance del proyecto que la plataforma contaria solo con 4 roles definidos)
+&nbsp;    @PostMapping()
+&nbsp;    public ResponseEntity&lt;?&gt; createRole(@RequestBody RoleEntity role){
+&nbsp;
+<b class="fc">&nbsp;        Optional&lt;RoleEntity&gt; existingRole = roleService.validateAccountType(role.getAccountType());</b>
+&nbsp;
+&nbsp;        //Se verifica si ya está definido un rol para el tipo de cuenta ingresado.
+<b class="fc">&nbsp;        if(existingRole.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;ESTE ROL YA EXISTE\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;Ya existe el rol para el tipo de cuenta ingresado&quot;); </b>
+&nbsp;        }
+&nbsp;
+&nbsp;        //PENDIENTE: ¿De que manera se le asignaran los permisos a un nuevo rol desconocido?
+&nbsp;
+<b class="fc">&nbsp;        roleService.createRole(role);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;ROL GUARDADO CON EXITO\n&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite actualizar información de un rol.
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; updateRole(@PathVariable long id, @RequestBody RoleEntity role) {
+&nbsp;        
+<b class="fc">&nbsp;        Optional&lt;RoleEntity&gt; checkRole = roleService.getRoleById(id);</b>
+&nbsp;        
+<b class="fc">&nbsp;        if(!checkRole.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO EL ROL CON ID: &quot; + id + &quot; \n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;El rol con el ID especificado no existe.&quot;); </b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        Optional&lt;RoleEntity&gt; checkAccountType = roleService.validateAccountType(role.getAccountType());</b>
+&nbsp;
+<b class="fc">&nbsp;        if(checkAccountType.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;TIPO DE CUENTA INGRESADO YA EXISTE\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;El tipo de cuenta ingresado ya existe&quot;); </b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        roleService.updateRole(id,role);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;ROL ACTUALIZADO CON EXITO\n&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build(); </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite eliminar todos los roles del sistema.
+&nbsp;    @DeleteMapping()
+&nbsp;    public ResponseEntity&lt;String&gt; deleteRoles(){
+<b class="fc">&nbsp;        roleService.deleteRoles();</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;SE ELIMINARON LOS ROLES CORRECTAMENTE&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite eliminar un rol en especifico del sistema.
+&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;String&gt; deleteRoleById(@PathVariable Long id){
+<b class="fc">&nbsp;        if(!roleService.existsRoleById(id)){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO UN ROL CON EL ID: &quot;+ id + &quot;\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        roleService.deleteRoleById(id);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;ROLE CON ID &quot; + id + &quot; ELIMINADO CORRECTAMENTE\n&quot;);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;    
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

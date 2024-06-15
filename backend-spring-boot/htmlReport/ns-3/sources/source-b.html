@@ -1,0 +1,189 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > SellerController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: SellerController (com.civilo.roller.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SellerController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (25/25)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.controllers;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.CoverageEntity;
+&nbsp;import com.civilo.roller.Entities.SellerEntity;
+&nbsp;import com.civilo.roller.services.SellerService;
+&nbsp;import jakarta.servlet.http.HttpServletRequest;
+&nbsp;import jakarta.servlet.http.HttpSession;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import java.util.Optional; 
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@CrossOrigin(origins = &quot;*&quot;, allowedHeaders = &quot;*&quot;)
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/sellers&quot;)
+<b class="fc">&nbsp;public class SellerController {</b>
+&nbsp;    @Autowired
+&nbsp;    SellerService sellerService;
+&nbsp;
+&nbsp;    // Permite obtener todos los vendedores del sistema.
+&nbsp;    @GetMapping()
+&nbsp;    public List&lt;SellerEntity&gt; getSellers(){
+<b class="fc">&nbsp;        return sellerService.getSellers();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //Permite obtener un vendedor en especifico del sistema.
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;SellerEntity&gt; getSellerById(@PathVariable long id){
+<b class="fc">&nbsp;        Optional&lt;SellerEntity&gt; seller = sellerService.getSellerById(id);</b>
+<b class="fc">&nbsp;        if(!seller.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO EL VENDEDOR \n&quot;);</b>
+<b class="fc">&nbsp;            return new ResponseEntity&lt;&gt;(null,HttpStatus.NOT_FOUND); </b>
+&nbsp;        }
+<b class="fc">&nbsp;        return new ResponseEntity&lt;SellerEntity&gt;(seller.get(), HttpStatus.OK);</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Permite guardar entidad vendedor.
+&nbsp;    @PostMapping()
+&nbsp;    public SellerEntity saveSeller(@RequestBody SellerEntity seller){
+<b class="fc">&nbsp;        return this.sellerService.saveSeller(seller);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //**Funciones register y update son implementadas directamente en UserController.**//
+&nbsp;
+&nbsp;    // Permite eliminar todos los vendedores del sistema
+&nbsp;    @DeleteMapping()
+&nbsp;    public ResponseEntity&lt;String&gt; deleteSellers(){
+<b class="fc">&nbsp;        sellerService.deleteSellers();</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;SE ELIMINARON LOS VENDEDORES CORRECTAMENTE&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite eliminar un vendedor en especifico del sistema.
+&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;String&gt; deleteSellerById(@PathVariable Long id){
+<b class="fc">&nbsp;        if(!sellerService.existsSellerById(id)){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO UN VENDEDOR CON EL ID: &quot;+ id + &quot;\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        sellerService.deleteSellerById(id);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;VENDEDOR CON ID &quot; + id + &quot; ELIMINADO CORRECTAMENTE\n&quot;);</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    //------------------------------------------------------------------------------------------------------------------------------------------------//
+&nbsp;
+&nbsp;    @PostMapping(&quot;/login&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; login(@RequestBody SellerEntity userDTO, HttpServletRequest request){
+<b class="fc">&nbsp;        SellerEntity seller = sellerService.validateSeller(userDTO.getEmail(), userDTO.getPassword());</b>
+<b class="fc">&nbsp;        if (seller == null){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;CORREO O CONTRASEÑA INCORRECTA\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        HttpSession session = request.getSession();</b>
+<b class="fc">&nbsp;        session.setAttribute(&quot;seller&quot;, seller);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;SESIÓN INICIADA CORRECTAMENTE&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/sellerInformation&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; sellerInformationUpdateCompanyName(@RequestBody SellerEntity userDTO){
+<b class="fc">&nbsp;        sellerService.updateCoverageIdAndCompanyNameSellerByEmail(userDTO.getEmail(), userDTO.getCompanyName(), userDTO.getCoverageID(), userDTO.getBank(), userDTO.getBankAccountType(), userDTO.getBankAccountNumber());</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

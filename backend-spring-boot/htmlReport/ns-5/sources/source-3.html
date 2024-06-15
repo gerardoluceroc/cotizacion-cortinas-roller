@@ -1,0 +1,250 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > IVAService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.services</a>
+</div>
+
+<h1>Coverage Summary for Class: IVAService (com.civilo.roller.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">IVAService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (26/26)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">IVAService$MockitoMock$4PBv9KLH</td>
+  </tr>
+  <tr>
+    <td class="name">IVAService$MockitoMock$4PBv9KLH$auxiliary$BKTOYeEj</td>
+  </tr>
+  <tr>
+    <td class="name">IVAService$MockitoMock$4PBv9KLH$auxiliary$fiFllK19</td>
+  </tr>
+  <tr>
+    <td class="name">IVAService$MockitoMock$4PBv9KLH$auxiliary$gckndv2i</td>
+  </tr>
+  <tr>
+    <td class="name">IVAService$MockitoMock$4PBv9KLH$auxiliary$jNsTmyQa</td>
+  </tr>
+  <tr>
+    <td class="name">IVAService$MockitoMock$4PBv9KLH$auxiliary$kKj4Q9UW</td>
+  </tr>
+  <tr>
+    <td class="name">IVAService$MockitoMock$4PBv9KLH$auxiliary$nIToCz5Y</td>
+  </tr>
+  <tr>
+    <td class="name">IVAService$MockitoMock$4PBv9KLH$auxiliary$nkcW6Moj</td>
+  </tr>
+  <tr>
+    <td class="name">IVAService$MockitoMock$4PBv9KLH$auxiliary$q6TvEWIU</td>
+  </tr>
+  <tr>
+    <td class="name">IVAService$MockitoMock$4PBv9KLH$auxiliary$TB6V5uNv</td>
+  </tr>
+  <tr>
+    <td class="name">IVAService$MockitoMock$4PBv9KLH$auxiliary$UdhaOxNQ</td>
+  </tr>
+  <tr>
+    <td class="name">IVAService$MockitoMock$4PBv9KLH$auxiliary$WDq5I9JE</td>
+  </tr>
+  <tr>
+    <td class="name">IVAService$MockitoMock$4PBv9KLH$auxiliary$XaGOVpRV</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (26/26)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.services;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.IVAEntity;
+&nbsp;import com.civilo.roller.repositories.IVARepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import com.civilo.roller.exceptions.EntityNotFoundException;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class IVAService {</b>
+&nbsp;    @Autowired
+&nbsp;    IVARepository ivaRepository;
+&nbsp;
+&nbsp;    // Get all
+&nbsp;    // El siguiente método retorna un listado el cual contiene TODA la información asociada al IVA
+&nbsp;    public float getIVAPercentage(){
+<b class="fc">&nbsp;        List&lt;IVAEntity&gt; ivaEntityList = (List&lt;IVAEntity&gt;) ivaRepository.findAll();</b>
+<b class="fc">&nbsp;        Integer size = ivaEntityList.size();</b>
+&nbsp;        float percentage;
+&nbsp;
+&nbsp;        //ESTE IF LO HICE PARA CORREGIR EL PROBLEMA DE QUE SI SIZE ES CERO HAY VIOLACIÓN DE SEGMENTO
+&nbsp;        //nose que es lo que hace esta funcion y cual es su objetivo, el arreglo que hice fue momentaneo
+&nbsp;        //el que hizo esto que lo vea porfa para que vea que entregue la respuesta que se busca en caso de tener un size de 0
+<b class="fc">&nbsp;        if(size &gt; 0){</b>
+<b class="fc">&nbsp;            percentage = ivaEntityList.get(size - 1).getIvaPercentage();</b>
+&nbsp;        }
+&nbsp;        else{
+<b class="fc">&nbsp;            percentage = 0;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return percentage;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Get the last
+&nbsp;    public IVAEntity getLastIVA(){
+<b class="fc">&nbsp;        List&lt;IVAEntity&gt; ivaEntityList = (List&lt;IVAEntity&gt;) ivaRepository.findAll();</b>
+<b class="fc">&nbsp;        Integer size = ivaEntityList.size();</b>
+<b class="fc">&nbsp;        return ivaEntityList.get(size - 1);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Se obtiene iva por porcentaje
+&nbsp;    public IVAEntity getIVAByPercentage(float percentage){
+<b class="fc">&nbsp;        List&lt;IVAEntity&gt; ivaEntities = (List&lt;IVAEntity&gt;) ivaRepository.findAll();</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; ivaEntities.size(); i++){</b>
+<b class="fc">&nbsp;            if (percentage == ivaEntities.get(i).getIvaPercentage()){</b>
+<b class="fc">&nbsp;                return ivaEntities.get(i);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //----
+&nbsp;
+&nbsp;    // Get all
+&nbsp;    // El siguiente método retorna un listado el cual contiene TODA la información asociada a los iva
+&nbsp;    public List&lt;IVAEntity&gt; getIVAs(){
+<b class="fc">&nbsp;        return (List&lt;IVAEntity&gt;) ivaRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Get by id
+&nbsp;    // Permite obtener la informacion de un iva en especifico.
+&nbsp;    public Optional&lt;IVAEntity&gt; getIVAById(Long id){
+<b class="fc">&nbsp;        return ivaRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Create
+&nbsp;    // Permite guardar un objeto del tipo &quot;IVAEntity&quot; en la base de datos.
+&nbsp;    public IVAEntity createIVA(IVAEntity iva){   
+<b class="fc">&nbsp;        return ivaRepository.save(iva);  </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Update
+&nbsp;    // Permite actualizar los datos de un objeto del tipo &quot;IVAEntity&quot; en la base de datos.
+&nbsp;    public IVAEntity updateIVA(Long ivaID, IVAEntity iva){
+<b class="fc">&nbsp;        IVAEntity existingIVA = ivaRepository.findById(ivaID)</b>
+<b class="fc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;IVA no encontrado con el ID: &quot; + ivaID));</b>
+&nbsp;
+<b class="fc">&nbsp;        existingIVA.setIvaPercentage(iva.getIvaPercentage());</b>
+&nbsp;        
+<b class="fc">&nbsp;        IVAEntity updatedIVA = ivaRepository.save(existingIVA);</b>
+<b class="fc">&nbsp;        return updatedIVA;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete all
+&nbsp;    // Permite eliminar todos los IVAs del sistema.
+&nbsp;    public void deleteIVAs() {
+<b class="fc">&nbsp;        ivaRepository.deleteAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete by id
+&nbsp;    // Permite eliminar un iva en especifico del sistema.
+&nbsp;    public void deleteIVAById(Long id){
+<b class="fc">&nbsp;        ivaRepository.deleteById(id);</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Permite verificar si existe un usario en el sistema, segun el id ingresado.
+&nbsp;    public boolean existsIVAById(Long id){
+<b class="fc">&nbsp;        return ivaRepository.findById(id).isPresent();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

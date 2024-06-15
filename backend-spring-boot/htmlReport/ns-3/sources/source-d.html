@@ -1,0 +1,324 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > UserController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: UserController (com.civilo.roller.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (81/81)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.controllers;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.DataTransferObjectEntity;
+&nbsp;import com.civilo.roller.Entities.SellerEntity;
+&nbsp;import com.civilo.roller.Entities.UserEntity;
+&nbsp;import com.civilo.roller.services.PermissionService;
+&nbsp;import com.civilo.roller.services.RoleService;
+&nbsp;import com.civilo.roller.services.SellerService;
+&nbsp;import com.civilo.roller.services.UserService;
+&nbsp;import jakarta.servlet.http.HttpServletRequest;
+&nbsp;import jakarta.servlet.http.HttpSession;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestBody;
+&nbsp;
+&nbsp;
+&nbsp;@CrossOrigin(origins = &quot;*&quot;, allowedHeaders = &quot;*&quot;)
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/users&quot;)
+<b class="fc">&nbsp;public class UserController {</b>
+&nbsp;    @Autowired
+&nbsp;    UserService userService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    PermissionService permissionService;
+&nbsp;
+&nbsp;    @Autowired 
+&nbsp;    RoleService roleService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    SellerService sellerService;
+&nbsp;
+&nbsp;    // Permite obtener todos los usuarios del sistema.
+&nbsp;    @GetMapping()
+&nbsp;    public List&lt;UserEntity&gt; getUsers(){
+<b class="fc">&nbsp;        return userService.getUsers();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/{email}&quot;)
+&nbsp;    public UserEntity getUserByEmail(@PathVariable(&quot;email&quot;) String email){
+<b class="fc">&nbsp;        return this.userService.getUserByEmail(email);</b>
+&nbsp;    }
+&nbsp; 
+&nbsp;    /*
+&nbsp;    // Permite obtener un usuario en especifico del sistema.
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;UserEntity&gt; getUserById(@PathVariable long id){
+&nbsp;        Optional&lt;UserEntity&gt; user = userService.getUserById(id);
+&nbsp;        if(!user.isPresent()){
+&nbsp;            System.out.println(&quot;NO SE ENCONTRO EL USUARIO \n&quot;);
+&nbsp;            return new ResponseEntity&lt;&gt;(null,HttpStatus.NOT_FOUND); 
+&nbsp;        }
+&nbsp;        return new ResponseEntity&lt;UserEntity&gt;(user.get(), HttpStatus.OK);
+&nbsp;    }
+&nbsp;    */
+&nbsp;
+&nbsp;    // Permite guardar entidad usuario.
+&nbsp;    @PostMapping()
+&nbsp;    public UserEntity saveUser(@RequestBody UserEntity user) {
+<b class="fc">&nbsp;        return this.userService.createUser(user);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite guardar un nuevo usuario en el sistema.
+&nbsp;    @PostMapping(&quot;/register&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; createUser(@RequestBody UserEntity user){
+&nbsp;
+<b class="fc">&nbsp;        Optional&lt;UserEntity&gt; existingUser = userService.validateEmail(user.getEmail());</b>
+&nbsp;
+&nbsp;        //Se verifica si el email esta registrado
+<b class="fc">&nbsp;        if(existingUser.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;CORREO YA REGISTRADO\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;El email ingresado ya existe&quot;); </b>
+&nbsp;        }
+&nbsp;
+&nbsp;        //Se obtiene la id del rol dependiendo del tipo de cuenta
+<b class="fc">&nbsp;        String accountType = user.getRole().getAccountType();</b>
+<b class="fc">&nbsp;        Long IdRol = roleService.getRoleIdByAccountType(accountType);</b>
+&nbsp;
+&nbsp;        //Se guarda la id del rol dentro del usuario
+<b class="fc">&nbsp;        user.getRole().setRoleID(IdRol);</b>
+&nbsp;
+<b class="fc">&nbsp;        if (accountType.equals(&quot;Vendedor&quot;)){</b>
+<b class="fc">&nbsp;            SellerEntity seller = new SellerEntity(null, user.getName(), user.getSurname(), user.getEmail(), user.getPassword(), user.getRut(), user.getPhoneNumber(), user.getCommune(), user.getBirthDate(), user.getAge(), user.getStartTime(), user.getEndTime(), user.getRole(), null, false, null, null, 0);</b>
+<b class="fc">&nbsp;            sellerService.saveSeller(seller);</b>
+<b class="fc">&nbsp;            System.out.println(&quot;GUARDADO CON EXITO\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok().build();</b>
+&nbsp;        }
+&nbsp;        else {
+<b class="fc">&nbsp;            userService.createUser(user);</b>
+<b class="fc">&nbsp;            System.out.println(&quot;GUARDADO CON EXITO\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok().build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite actualizar información de un usuario.
+&nbsp;    @PostMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; updateUser(@PathVariable long id, @RequestBody UserEntity user) {
+<b class="fc">&nbsp;        Optional&lt;UserEntity&gt; checkUser = userService.getUserById(id);</b>
+&nbsp;        
+<b class="fc">&nbsp;        if(!checkUser.isPresent()){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO EL USUARIO CON ID: &quot; + id + &quot; \n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;El usuario con el ID especificado no se encuentra registrado.&quot;); </b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        Optional&lt;UserEntity&gt; checkEmail = userService.validateEmail(user.getEmail());</b>
+&nbsp;        /*
+&nbsp;        if(checkEmail.isPresent()){
+&nbsp;            System.out.println(&quot;CORREO EN USO \n&quot;);
+&nbsp;            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;El email a modificar ya se encuentra registrado&quot;); 
+&nbsp;        }*/
+&nbsp;
+<b class="fc">&nbsp;        userService.updateUser(id,user);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;ACTUALIZADO CON EXITO \n&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build(); </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite eliminar todos los usuarios del sistema.
+&nbsp;    @DeleteMapping()
+&nbsp;    public ResponseEntity&lt;String&gt; deleteUsers(){
+<b class="fc">&nbsp;        userService.deleteUsers();</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;SE ELIMINARON LOS USUARIOS CORRECTAMENTE&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite eliminar un usuario en especifico del sistema.
+&nbsp;    @DeleteMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;String&gt; deleteUserById(@PathVariable Long id){
+<b class="fc">&nbsp;        if(!userService.existsUserById(id)){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;NO SE ENCONTRO UN USUARIO CON EL ID: &quot;+ id + &quot;\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.notFound().build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        userService.deleteUserById(id);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(&quot;USUARIO CON ID &quot; + id + &quot; ELIMINADO CORRECTAMENTE \n&quot;);</b>
+&nbsp;    }
+&nbsp; 
+&nbsp;    //------------------------------------------------------------------------------------------------------------------------------------------------//
+&nbsp;    
+&nbsp;    @PostMapping(&quot;/login&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; login(@RequestBody UserEntity userDTO, HttpServletRequest request){
+<b class="fc">&nbsp;        UserEntity user = userService.validateUser(userDTO.getEmail(), userDTO.getPassword());</b>
+<b class="fc">&nbsp;        if (user == null){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;CORREO O CONTRASEÑA INCORRECTA\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        HttpSession session = request.getSession();</b>
+<b class="fc">&nbsp;        session.setAttribute(&quot;user&quot;, user);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;SESIÓN INICIADA CORRECTAMENTE&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/logout&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; logout(HttpServletRequest request){
+<b class="fc">&nbsp;        HttpSession session = request.getSession(false);</b>
+<b class="fc">&nbsp;        if (session != null){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;SESIÓN CERRADA CORRECTAMENTE&quot;);</b>
+<b class="fc">&nbsp;            session.invalidate();</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok().build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        System.out.println(&quot;NO HAY SESIÓN INICIADA&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/session&quot;)
+&nbsp;    public String getSession(HttpSession session) {
+<b class="fc">&nbsp;        String sessionId = session.getId();</b>
+<b class="fc">&nbsp;        UserEntity user = (UserEntity) session.getAttribute(&quot;user&quot;);</b>
+<b class="fc">&nbsp;        return &quot;Session ID: &quot; + sessionId + &quot;\n&quot; +</b>
+<b class="fc">&nbsp;                &quot;User email      : &quot; + user.getEmail() + &quot;\n&quot; +</b>
+<b class="fc">&nbsp;                &quot;User full name  : &quot; + user.getName() + &quot; &quot; + user.getSurname() + &quot;\n&quot; +</b>
+<b class="fc">&nbsp;                &quot;User role       : &quot; + user.getRole().getAccountType() + &quot;\n&quot; +</b>
+<b class="fc">&nbsp;                &quot;User role ID    : &quot; + user.getRole().getRoleID() + &quot;\n&quot; +</b>
+<b class="fc">&nbsp;                &quot;User permissions: &quot; + permissionService.rolePermissions(user.getRole().getRoleID()) + &quot;\n&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/currentSession&quot;) 
+&nbsp;    public UserEntity getCurrentSession(@RequestParam(&quot;email&quot;) String emailSession, @RequestParam(&quot;password&quot;) String passwordSession) { 
+<b class="fc">&nbsp;        UserEntity user = userService.validateUser(emailSession, passwordSession); </b>
+<b class="fc">&nbsp;        return user; </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/loginExecutive&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; loginExecutive(@RequestBody UserEntity userDTO, HttpServletRequest request){
+<b class="fc">&nbsp;        UserEntity user = userService.validateUser(userDTO.getEmail(), userDTO.getPassword());</b>
+<b class="fc">&nbsp;        if (user == null){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;CORREO O CONTRASEÑA INCORRECTA\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        else if (user.getRole().getAccountType().equals(&quot;Ejecutivo&quot;)){</b>
+<b class="fc">&nbsp;            HttpSession session = request.getSession();</b>
+<b class="fc">&nbsp;            session.setAttribute(&quot;user&quot;, user);</b>
+<b class="fc">&nbsp;            System.out.println(&quot;SESIÓN INICIADA CORRECTAMENTE&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok().build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        System.out.println(&quot;NO FIGURA CON EL ROL INGRESADO\n&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/loginAdmin&quot;)
+&nbsp;    public ResponseEntity&lt;?&gt; loginAdmin(@RequestBody UserEntity userDTO, HttpServletRequest request){
+<b class="fc">&nbsp;        UserEntity user = userService.validateUser(userDTO.getEmail(), userDTO.getPassword());</b>
+<b class="fc">&nbsp;        if (user == null){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;CORREO O CONTRASEÑA INCORRECTA\n&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        else if (user.getRole().getAccountType().equals(&quot;Administrador&quot;)){</b>
+<b class="fc">&nbsp;            HttpSession session = request.getSession();</b>
+<b class="fc">&nbsp;            session.setAttribute(&quot;user&quot;, user);</b>
+<b class="fc">&nbsp;            System.out.println(&quot;SESIÓN INICIADA CORRECTAMENTE&quot;);</b>
+<b class="fc">&nbsp;            return ResponseEntity.ok().build();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        System.out.println(&quot;NO FIGURA CON EL ROL INGRESADO\n&quot;);</b>
+<b class="fc">&nbsp;        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

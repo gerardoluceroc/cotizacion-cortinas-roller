@@ -1,0 +1,219 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > StatusService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.services</a>
+</div>
+
+<h1>Coverage Summary for Class: StatusService (com.civilo.roller.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StatusService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/14)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">StatusService$MockitoMock$fHKksxBC</td>
+  </tr>
+  <tr>
+    <td class="name">StatusService$MockitoMock$fHKksxBC$auxiliary$8kgh6CId</td>
+  </tr>
+  <tr>
+    <td class="name">StatusService$MockitoMock$fHKksxBC$auxiliary$947gaHwa</td>
+  </tr>
+  <tr>
+    <td class="name">StatusService$MockitoMock$fHKksxBC$auxiliary$avOaGpLo</td>
+  </tr>
+  <tr>
+    <td class="name">StatusService$MockitoMock$fHKksxBC$auxiliary$iRCzNs3v</td>
+  </tr>
+  <tr>
+    <td class="name">StatusService$MockitoMock$fHKksxBC$auxiliary$ohj9LhJM</td>
+  </tr>
+  <tr>
+    <td class="name">StatusService$MockitoMock$fHKksxBC$auxiliary$OrLR0OYv</td>
+  </tr>
+  <tr>
+    <td class="name">StatusService$MockitoMock$fHKksxBC$auxiliary$qdBoXUQa</td>
+  </tr>
+  <tr>
+    <td class="name">StatusService$MockitoMock$fHKksxBC$auxiliary$QSAzBUtz</td>
+  </tr>
+  <tr>
+    <td class="name">StatusService$MockitoMock$fHKksxBC$auxiliary$ri7JVAqJ</td>
+  </tr>
+  <tr>
+    <td class="name">StatusService$MockitoMock$fHKksxBC$auxiliary$RXg2gYkB</td>
+  </tr>
+  <tr>
+    <td class="name">StatusService$MockitoMock$fHKksxBC$auxiliary$sXbZ4wGK</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/14)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.services;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.StatusEntity;
+&nbsp;import com.civilo.roller.repositories.StatusRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import com.civilo.roller.exceptions.EntityNotFoundException;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class StatusService {</b>
+&nbsp;    @Autowired
+&nbsp;    StatusRepository statusRepository;
+&nbsp;
+&nbsp;    // Get All
+&nbsp;    // El siguiente método retorna un listado el cual contiene TODA la información asociada a los estados
+&nbsp;    public List&lt;StatusEntity&gt; getStatus(){
+<b class="fc">&nbsp;        return (List&lt;StatusEntity&gt;) statusRepository.findAll();</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Get by id
+&nbsp;    // Permite obtener la informacion de un estado en especifico.
+&nbsp;    public Optional&lt;StatusEntity&gt; getStatusById(Long id){
+<b class="fc">&nbsp;        return statusRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Create
+&nbsp;    // Permite guardar un objeto del tipo &quot;StatusEntity&quot; en la base de datos.
+&nbsp;    public StatusEntity createStatus(StatusEntity status){   
+<b class="fc">&nbsp;        return statusRepository.save(status);  </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite verificar si existe el tipo de cuenta ingresado.
+&nbsp;    public Optional&lt;StatusEntity&gt; validateStatusName(String statusName){
+<b class="fc">&nbsp;        return Optional.ofNullable(statusRepository.findByStatusName(statusName));  </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Update
+&nbsp;    // Permite actualizar los datos de un objeto del tipo &quot;StatusEntity&quot; en la base de datos.
+&nbsp;    public StatusEntity updateStatus(Long statusID, StatusEntity status){
+<b class="fc">&nbsp;        StatusEntity existingStatus = statusRepository.findById(statusID)</b>
+<b class="fc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Estado no encontrado con el ID: &quot; + statusID));</b>
+&nbsp;
+<b class="fc">&nbsp;        existingStatus.setStatusName(status.getStatusName());</b>
+&nbsp;        
+<b class="fc">&nbsp;        StatusEntity updatedStatus = statusRepository.save(existingStatus);</b>
+<b class="fc">&nbsp;        return updatedStatus;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete all
+&nbsp;    // Permite eliminar todos los estados de un sistema.
+&nbsp;    public void deleteStatus() {
+<b class="fc">&nbsp;        statusRepository.deleteAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete by id
+&nbsp;    // Permite eliminar un estado en especifico del sistema.
+&nbsp;    public void deleteStatusById(Long id){
+<b class="fc">&nbsp;        statusRepository.deleteById(id);</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Permite verificar si existe un estado en el sistema, segun el id ingresado.
+&nbsp;    public boolean existsStatusById(Long id){
+<b class="fc">&nbsp;        return statusRepository.findById(id).isPresent();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //Se obtiene la ID del estado dependiendo del nombre del estado
+&nbsp;    public Long getStatusIdByStatusName(String statusName){
+<b class="fc">&nbsp;        return statusRepository.findIdByStatusName(statusName);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

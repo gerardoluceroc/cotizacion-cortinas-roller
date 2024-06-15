@@ -1,0 +1,227 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CoverageService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.services</a>
+</div>
+
+<h1>Coverage Summary for Class: CoverageService (com.civilo.roller.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CoverageService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/15)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CoverageService$MockitoMock$t8bVqSAd</td>
+  </tr>
+  <tr>
+    <td class="name">CoverageService$MockitoMock$t8bVqSAd$auxiliary$7KsFJ6ae</td>
+  </tr>
+  <tr>
+    <td class="name">CoverageService$MockitoMock$t8bVqSAd$auxiliary$7YtuhwDg</td>
+  </tr>
+  <tr>
+    <td class="name">CoverageService$MockitoMock$t8bVqSAd$auxiliary$B7p71sca</td>
+  </tr>
+  <tr>
+    <td class="name">CoverageService$MockitoMock$t8bVqSAd$auxiliary$djfYO6s1</td>
+  </tr>
+  <tr>
+    <td class="name">CoverageService$MockitoMock$t8bVqSAd$auxiliary$gQCFVa9x</td>
+  </tr>
+  <tr>
+    <td class="name">CoverageService$MockitoMock$t8bVqSAd$auxiliary$h6dqiw8l</td>
+  </tr>
+  <tr>
+    <td class="name">CoverageService$MockitoMock$t8bVqSAd$auxiliary$pDNL9sd0</td>
+  </tr>
+  <tr>
+    <td class="name">CoverageService$MockitoMock$t8bVqSAd$auxiliary$QicZEVp5</td>
+  </tr>
+  <tr>
+    <td class="name">CoverageService$MockitoMock$t8bVqSAd$auxiliary$ujylr3NM</td>
+  </tr>
+  <tr>
+    <td class="name">CoverageService$MockitoMock$t8bVqSAd$auxiliary$VCm1I18g</td>
+  </tr>
+  <tr>
+    <td class="name">CoverageService$MockitoMock$t8bVqSAd$auxiliary$w3dmLlfk</td>
+  </tr>
+  <tr>
+    <td class="name">CoverageService$MockitoMock$t8bVqSAd$auxiliary$Y7DGq4fl</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/15)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.services;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.CoverageEntity;
+&nbsp;import com.civilo.roller.repositories.CoverageRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import com.civilo.roller.exceptions.EntityNotFoundException;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class CoverageService {</b>
+&nbsp;    @Autowired
+&nbsp;    CoverageRepository coverageRepository;
+&nbsp;
+&nbsp;    // Get all
+&nbsp;    // Permite obtener un listado con toda la informacion asociada a las coberturas.
+&nbsp;    public List&lt;CoverageEntity&gt; getCoverages(){
+<b class="fc">&nbsp;        return (List&lt;CoverageEntity&gt;) coverageRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Get by id
+&nbsp;    // Permite obtener la informacion de una cobertura en especifico.
+&nbsp;    public Optional&lt;CoverageEntity&gt; getCoverageById(Long id){
+<b class="fc">&nbsp;        return coverageRepository.findById(id);</b>
+&nbsp;    }   
+&nbsp;
+&nbsp;    // Create
+&nbsp;    // Permite guardar un objeto del tipo &quot;CoverageEntity&quot; en la base de datos.
+&nbsp;    public CoverageEntity createCoverage(CoverageEntity coverage){
+<b class="fc">&nbsp;        return coverageRepository.save(coverage);</b>
+&nbsp;    }
+&nbsp; 
+&nbsp;    // Permite verificar si existe una comuna registrada con el mismo nombre.
+&nbsp;    public Optional&lt;CoverageEntity&gt; validateCoverage(String commune){
+<b class="fc">&nbsp;        return Optional.ofNullable(coverageRepository.findByCommune(commune));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Update
+&nbsp;    // Permite actualizar los datos de un objeto del tipo &quot;CoverageEntity&quot; en la base de datos.
+&nbsp;    public CoverageEntity updateCoverage(Long coverageID, CoverageEntity coverage){
+&nbsp;
+<b class="fc">&nbsp;        CoverageEntity existingCommune = coverageRepository.findById(coverageID)</b>
+<b class="fc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Comuna no encontrada con el ID: &quot; + coverageID));</b>
+&nbsp;
+<b class="fc">&nbsp;            existingCommune.setCommune(coverage.getCommune());</b>
+&nbsp;
+<b class="fc">&nbsp;            CoverageEntity updatedCoverage = coverageRepository.save(existingCommune);</b>
+<b class="fc">&nbsp;            return updatedCoverage;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete all
+&nbsp;    // Permite eliminar todas las comunas de un sistema.
+&nbsp;    public void deleteCoverages(){
+<b class="fc">&nbsp;        coverageRepository.deleteAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete by id
+&nbsp;    // Permite eliminar una comuna en especifico del sistema.
+&nbsp;    public void deleteCoverageById(Long id){
+<b class="fc">&nbsp;        coverageRepository.deleteById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite verificar si existe una comuna en el sistema, segun el id ingresado.
+&nbsp;    public boolean existCoverageById(Long id){
+<b class="fc">&nbsp;        return coverageRepository.findById(id).isPresent();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //-----------------------------------------------------------------------------------------------------------------------------------------------//
+&nbsp;
+&nbsp;    public Optional&lt;CoverageEntity&gt; getCoverage(Long id){
+<b class="fc">&nbsp;        return coverageRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Long getCoverageIdByCommune(String commune){
+<b class="fc">&nbsp;        return coverageRepository.findByCommune(commune).getCoverageID();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

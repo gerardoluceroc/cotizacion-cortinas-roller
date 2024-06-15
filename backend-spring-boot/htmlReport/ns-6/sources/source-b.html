@@ -1,0 +1,103 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > RequestRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.repositories</a>
+</div>
+
+<h1>Coverage Summary for Class: RequestRepository (com.civilo.roller.repositories)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">RequestRepository$MockitoMock$AHAlGYsY</td>
+  </tr>
+  <tr>
+    <td class="name">RequestRepository$MockitoMock$AHAlGYsY$auxiliary$9s73RGFV</td>
+  </tr>
+  <tr>
+    <td class="name">RequestRepository$MockitoMock$AHAlGYsY$auxiliary$TJXzoeBI</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.repositories;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.RequestEntity;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;import org.hibernate.mapping.List;
+&nbsp;import org.springframework.data.jpa.repository.Query;
+&nbsp;import org.springframework.data.repository.CrudRepository;
+&nbsp;import org.springframework.data.repository.query.Param;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;@Repository
+&nbsp;public interface RequestRepository extends CrudRepository&lt;RequestEntity, Long&gt; {
+&nbsp;
+&nbsp;    //Se consulta a la base de datos por el sueldo fijo mensual de un empleado de acuerdo a su id
+&nbsp;    //@Query(value = &quot;select c.sueldo_fijo_mensual from categorias_empleados c, empleados e where e.id_categoria = c.id_categoria and e.id_empleado = :id&quot;, nativeQuery = true)
+&nbsp;    //int consultarSueldoFijoMensual(@Param(&quot;id&quot;) Long id);
+&nbsp;
+&nbsp;    //Se consulta por las solicitudes hechas por un cliente en especifico
+&nbsp;    @Query(value = &quot;SELECT r FROM RequestEntity r JOIN FETCH r.user WHERE r.user.id = :id_cliente&quot;)
+&nbsp;    ArrayList&lt;RequestEntity&gt; findRequestByUserId(@Param(&quot;id_cliente&quot;) Long id_cliente);
+&nbsp;    //La siguiente consulta no me funcionó, la dejo porsiacaso nomas.
+&nbsp;    //@Query(value = &quot;select req from requests req where req.users = :id_cliente&quot;, nativeQuery = true)
+&nbsp;    //ArrayList&lt;RequestEntity&gt; findRequestByUserId(@Param(&quot;id_cliente&quot;) Long id_cliente);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>

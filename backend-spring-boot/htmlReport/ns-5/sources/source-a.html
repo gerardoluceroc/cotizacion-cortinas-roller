@@ -1,0 +1,220 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > RoleService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.civilo.roller.services</a>
+</div>
+
+<h1>Coverage Summary for Class: RoleService (com.civilo.roller.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RoleService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/14)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">RoleService$MockitoMock$34udgX0N</td>
+  </tr>
+  <tr>
+    <td class="name">RoleService$MockitoMock$34udgX0N$auxiliary$0rYTR8IK</td>
+  </tr>
+  <tr>
+    <td class="name">RoleService$MockitoMock$34udgX0N$auxiliary$5T8tCj86</td>
+  </tr>
+  <tr>
+    <td class="name">RoleService$MockitoMock$34udgX0N$auxiliary$81rdhQnc</td>
+  </tr>
+  <tr>
+    <td class="name">RoleService$MockitoMock$34udgX0N$auxiliary$aoHebU5A</td>
+  </tr>
+  <tr>
+    <td class="name">RoleService$MockitoMock$34udgX0N$auxiliary$ogsxYrhG</td>
+  </tr>
+  <tr>
+    <td class="name">RoleService$MockitoMock$34udgX0N$auxiliary$rF6LmJEE</td>
+  </tr>
+  <tr>
+    <td class="name">RoleService$MockitoMock$34udgX0N$auxiliary$roLliKhr</td>
+  </tr>
+  <tr>
+    <td class="name">RoleService$MockitoMock$34udgX0N$auxiliary$s3tLu3n4</td>
+  </tr>
+  <tr>
+    <td class="name">RoleService$MockitoMock$34udgX0N$auxiliary$X5ml4YEQ</td>
+  </tr>
+  <tr>
+    <td class="name">RoleService$MockitoMock$34udgX0N$auxiliary$yEXg2kwf</td>
+  </tr>
+  <tr>
+    <td class="name">RoleService$MockitoMock$34udgX0N$auxiliary$YhzvpKsY</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/14)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.civilo.roller.services;
+&nbsp;
+&nbsp;import com.civilo.roller.Entities.RoleEntity;
+&nbsp;import com.civilo.roller.repositories.RoleRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import com.civilo.roller.exceptions.EntityNotFoundException;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class RoleService {</b>
+&nbsp;    @Autowired
+&nbsp;    RoleRepository roleRepository;
+&nbsp;
+&nbsp;    // Get all
+&nbsp;    // El siguiente método retorna un listado el cual contiene TODA la información asociada a los roles
+&nbsp;    public List&lt;RoleEntity&gt; getRoles(){
+<b class="fc">&nbsp;        return (List&lt;RoleEntity&gt;) roleRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Get by id
+&nbsp;    // Permite obtener la informacion de un rol en especifico.
+&nbsp;    public Optional&lt;RoleEntity&gt; getRoleById(Long id){
+<b class="fc">&nbsp;        return roleRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Create
+&nbsp;    // Permite guardar un objeto del tipo &quot;RoleEntity&quot; en la base de datos.
+&nbsp;    public RoleEntity createRole(RoleEntity role){   
+<b class="fc">&nbsp;        return roleRepository.save(role);  </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Permite verificar si existe el tipo de cuenta ingresado.
+&nbsp;    public Optional&lt;RoleEntity&gt; validateAccountType(String accountType){
+<b class="fc">&nbsp;        return Optional.ofNullable(roleRepository.findByAccountType(accountType));  </b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Update
+&nbsp;    // Permite actualizar los datos de un objeto del tipo &quot;RoleEntity&quot; en la base de datos.
+&nbsp;    public RoleEntity updateRole(Long roleID, RoleEntity role){
+<b class="fc">&nbsp;        RoleEntity existingRole = roleRepository.findById(roleID)</b>
+<b class="fc">&nbsp;            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Rol no encontrado con el ID: &quot; + roleID));</b>
+&nbsp;
+<b class="fc">&nbsp;        existingRole.setAccountType(role.getAccountType()); //No deberia poder cambiarse</b>
+&nbsp;        
+<b class="fc">&nbsp;        RoleEntity updatedRole = roleRepository.save(existingRole);</b>
+<b class="fc">&nbsp;        return updatedRole;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete all
+&nbsp;    // Permite eliminar todos los roles del sistema.
+&nbsp;    public void deleteRoles() {
+<b class="fc">&nbsp;        roleRepository.deleteAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Delete by id
+&nbsp;    // Permite eliminar un rol en especifico del sistema.
+&nbsp;    public void deleteRoleById(Long id){
+<b class="fc">&nbsp;        roleRepository.deleteById(id);</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    // Permite verificar si existe un usario en el sistema, segun el id ingresado.
+&nbsp;    public boolean existsRoleById(Long id){
+<b class="fc">&nbsp;        return roleRepository.findById(id).isPresent();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //Se obtiene la ID del rol dependiendo del tipo de cuenta
+&nbsp;    public Long getRoleIdByAccountType(String accountType){
+<b class="fc">&nbsp;        return roleRepository.findIdByAccountType(accountType);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-31 11:09</div>
+</div>
+</body>
+</html>
